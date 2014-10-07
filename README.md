@@ -6,6 +6,18 @@ mainly an HTTP-to-SMTP bridge, but allowing for user preferenes
 — [Wikipedia](http://en.wikipedia.org/wiki/Navid)
 
 
+Getting Started
+---------------
+
+* set up dependencies:
+
+        $ go get github.com/gorilla/mux
+
+* launch server:
+
+        $ make server
+
+
 Concept
 -------
 
