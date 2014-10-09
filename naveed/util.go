@@ -2,8 +2,8 @@ package naveed
 
 import "fmt"
 
-func ReportError(err error) {
+func ReportError(err error, ctx string) {
 	if err != nil {
-		fmt.Printf("ERROR: %s\n", err)
+		fmt.Printf("ERROR %s: %s\n", ctx, err)
 	}
 }

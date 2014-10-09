@@ -12,7 +12,7 @@ func Server(port int) {
 	address := fmt.Sprintf(":%d", port)
 	fmt.Printf("→ http://localhost%s\n", address)
 	err := http.ListenAndServe(address, nil)
-	ReportError(err)
+	ReportError(err, "starting server")
 }
 
 func NotificationHandler(res http.ResponseWriter, req *http.Request) {

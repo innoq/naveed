@@ -1,0 +1,10 @@
+#!/usr/bin/env sh
+
+while [ -n "$1" ]; do
+	if [ "$1" = "INVALID" ]; then
+		exit 1
+	fi
+	shift
+done
+
+exit 0
