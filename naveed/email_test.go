@@ -18,7 +18,7 @@ func TestSendmail(t *testing.T) {
 		t.Errorf("FAIL'd (1)")
 	}
 
-	res = Sendmail("INVALID", "...", "...", "...")
+	res = Sendmail("INVALID", "INVALID", "INVALID", "INVALID")
 	if res != nil {
 		t.Errorf("FAIL'd (2)")
 	}
