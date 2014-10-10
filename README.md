@@ -15,6 +15,10 @@ Getting Started
 
         $ go get github.com/gorilla/mux
 
+  optionally, for testing:
+
+        $ go get github.com/stretchr/testify
+
 * launch server:
 
         $ make server
