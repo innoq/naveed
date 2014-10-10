@@ -1,0 +1,15 @@
+# ensure GET requests are rejected
+# this just makes sure nothing weird can happen, as that'd be awkward and we
+# don't like awkward
+
+> GET /outbox
+
+< HTTP/1.1 405
+
+# ...
+
+> POST /outbox
+> X-Hello: lorem ipsum
+
+< HTTP/1.1 202
+< X-World: dolor sit amet
