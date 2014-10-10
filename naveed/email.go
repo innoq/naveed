@@ -3,10 +3,17 @@ package naveed
 import "os/exec"
 import "io"
 
+var Mailx string // XXX: only required for testing
+
 // returns `nil` if unsuccessful
 // XXX: `sender` currently unused
 func Sendmail(sender string, recipient string, subject string, body string) []byte {
-	proc := exec.Command("mailx", "-s", subject, recipient)
+	cmd := "mailx"
+	if Mailx != "" {
+		cmd = Mailx
+	}
+
+	proc := exec.Command(cmd, "-s", subject, recipient)
 
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
