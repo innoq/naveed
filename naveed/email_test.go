@@ -1,15 +1,10 @@
 package naveed
 
 import "testing"
-import "fmt"
-import "os"
 
 func TestSendmail(t *testing.T) {
-	// setup
-	pwd, _ := os.Getwd()
-	original := fmt.Sprintf(":%s", os.Getenv("PATH"))
-	modified := fmt.Sprintf("%s/../test/fixtures/bin:%s", pwd, os.Getenv("PATH"))
-	os.Setenv("PATH", modified)
+	suite := new(TestSuite)
+	suite.Setup()
 
 	var res []byte
 
@@ -23,6 +18,5 @@ func TestSendmail(t *testing.T) {
 		t.Errorf("FAIL'd (2)")
 	}
 
-	// teardown
-	os.Setenv("PATH", original)
+	suite.Teardown()
 }
