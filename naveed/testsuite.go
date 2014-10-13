@@ -33,11 +33,17 @@ func (suite *TestSuite) RestoreStdout() {
 	os.Stdout = suite.stdout
 }
 
-func (suite *TestSuite) Request(method string, uri string, body io.Reader) *httptest.ResponseRecorder {
+// TODO: improve signature to make `body` and `contentType` optional and allow
+// for automatic form data conversion
+func (suite *TestSuite) Request(method string, uri string, body io.Reader,
+	contentType string) *httptest.ResponseRecorder {
 	if suite.Router == nil {
 		panic("router unset")
 	}
 	req, _ := http.NewRequest(method, uri, body)
+	if contentType != "" {
+		req.Header.Set("Content-Type", contentType)
+	}
 	res := httptest.NewRecorder()
 	suite.Router.ServeHTTP(res, req)
 	return res

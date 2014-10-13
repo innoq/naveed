@@ -26,9 +26,34 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	err := req.ParseForm()
+	if err != nil {
+		res.WriteHeader(400)
+		res.Write([]byte("invalid form data"))
+		return
+	}
+
+	subject := req.FormValue("subject")
+	if subject == "" {
+		res.WriteHeader(400)
+		res.Write([]byte("missing subject"))
+		return
+	}
+	recipients := req.FormValue("recipients")
+	if recipients == "" {
+		res.WriteHeader(400)
+		res.Write([]byte("missing recipients"))
+		return
+	}
+	body := req.FormValue("body") // TODO: rename?
+	if body == "" {
+		res.WriteHeader(400)
+		res.Write([]byte("missing message body"))
+		return
+	}
+
 	// TODO: check auth token
-	msg := "Hello World\n\nlorem ipsum\ndolor sit amet\n\n-- \nNaveed"
-	go Sendmail("fnd@innoq.com", "fnd@innoq.com", "Hello World", msg)
+	go Sendmail("fnd@innoq.com", recipients, subject, body)
 
 	res.WriteHeader(202)
 }
