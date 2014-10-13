@@ -32,26 +32,26 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 	err := req.ParseForm()
 	if err != nil {
 		res.WriteHeader(400)
-		res.Write([]byte("invalid form data"))
+		res.Write([]byte("invalid form data\n"))
 		return
 	}
 
 	subject := req.FormValue("subject")
 	if subject == "" {
 		res.WriteHeader(400)
-		res.Write([]byte("missing subject"))
+		res.Write([]byte("missing subject\n"))
 		return
 	}
 	recipients := req.Form["recipient"]
 	if recipients == nil {
 		res.WriteHeader(400)
-		res.Write([]byte("missing recipients"))
+		res.Write([]byte("missing recipients\n"))
 		return
 	}
 	body := req.FormValue("body") // TODO: rename?
 	if body == "" {
 		res.WriteHeader(400)
-		res.Write([]byte("missing message body"))
+		res.Write([]byte("missing message body\n"))
 		return
 	}
 
