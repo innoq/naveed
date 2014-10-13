@@ -7,6 +7,7 @@ import "net/url"
 import "strings"
 
 const formContentType = "application/x-www-form-urlencoded"
+const token = "9a790fc4-668b-4d19-aa9f-60c8a00d8621"
 
 func TestNotification(t *testing.T) {
 	suite := new(TestSuite)
@@ -22,28 +23,32 @@ func TestNotification(t *testing.T) {
 
 	res = suite.Request("POST", uri, nil, "")
 	assert.Equal(t, 400, res.Code)
-	assert.Equal(t, "invalid form data", res.Body.String())
+	assert.Equal(t, "invalid form data\n", res.Body.String())
 
 	res = submitForm(uri, url.Values{
+		"token":   {token},
 		"subject": {"Hello World"},
 	}, suite)
 	assert.Equal(t, 400, res.Code)
-	assert.Equal(t, "missing recipients", res.Body.String())
+	assert.Equal(t, "missing recipients\n", res.Body.String())
 
 	res = submitForm(uri, url.Values{
+		"token":     {token},
 		"recipient": {"fnd"},
 	}, suite)
 	assert.Equal(t, 400, res.Code)
-	assert.Equal(t, "missing subject", res.Body.String())
+	assert.Equal(t, "missing subject\n", res.Body.String())
 
 	res = submitForm(uri, url.Values{
+		"token":     {token},
 		"subject":   {"Hello World"},
 		"recipient": {"fnd"},
 	}, suite)
 	assert.Equal(t, 400, res.Code)
-	assert.Equal(t, "missing message body", res.Body.String())
+	assert.Equal(t, "missing message body\n", res.Body.String())
 
 	res = submitForm(uri, url.Values{
+		"token":     {token},
 		"subject":   {"Hello World"},
 		"recipient": {"fnd", "st"},
 		"body":      {"lorem ipsum\ndolor sit amet\n\n..."},

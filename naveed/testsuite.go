@@ -15,6 +15,7 @@ type TestSuite struct {
 
 func (suite *TestSuite) Setup() {
 	pwd, _ := os.Getwd()
+	Tokens = fmt.Sprintf("%s/../test/fixtures/tokens.cfg", pwd)
 	Mailx = fmt.Sprintf("%s/../test/fixtures/bin/mailx", pwd)
 }
 

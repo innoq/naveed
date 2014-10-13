@@ -36,6 +36,7 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	token := req.FormValue("token") // TODO: use header instead?
 	subject := req.FormValue("subject")
 	if subject == "" {
 		res.WriteHeader(400)
@@ -62,8 +63,12 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 	}
 	addresses := strings.Join(recipients, ", ")
 
-	// TODO: check auth token
-	go Sendmail(sender, addresses, subject, body)
+	if !checkToken(token) { // XXX: belongs into `Sendmail`
+		res.WriteHeader(403)
+		res.Write([]byte("token missing or invalid\n"))
+		return
+	}
 
+	go Sendmail(sender, addresses, subject, body)
 	res.WriteHeader(202)
 }
