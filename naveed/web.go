@@ -5,6 +5,8 @@ import "net/http"
 import "fmt"
 import "strings"
 
+const sender = "fnd@innoq.com"
+
 func Server(port int) {
 	Router()
 
@@ -61,7 +63,7 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 	addresses := strings.Join(recipients, ", ")
 
 	// TODO: check auth token
-	go Sendmail("fnd@innoq.com", addresses, subject, body)
+	go Sendmail(sender, addresses, subject, body)
 
 	res.WriteHeader(202)
 }
