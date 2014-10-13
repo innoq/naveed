@@ -6,6 +6,7 @@ import "testing"
 func TestSendmail(t *testing.T) {
 	suite := new(TestSuite)
 	suite.Setup()
+	defer suite.Teardown()
 
 	var res []byte
 
@@ -16,6 +17,4 @@ func TestSendmail(t *testing.T) {
 	res = Sendmail("INVALID", "INVALID", "INVALID", "INVALID")
 	assert.Nil(t, res)
 	suite.RestoreStdout()
-
-	suite.Teardown()
 }

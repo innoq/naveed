@@ -1,29 +1,20 @@
 package naveed
 
 import "github.com/stretchr/testify/assert"
-import "net/http"
 import "net/http/httptest"
 import "testing"
 
 func TestNotification(t *testing.T) {
 	suite := new(TestSuite)
+	suite.Router = Router()
 	suite.Setup()
+	defer suite.Teardown()
 
-	var req *http.Request
 	var res *httptest.ResponseRecorder
-	router := Router()
 
-	req, _ = http.NewRequest("GET", "/outbox", nil)
-	res = httptest.NewRecorder()
-	router.ServeHTTP(res, req)
-
+	res = suite.Request("GET", "/outbox", nil)
 	assert.Equal(t, 405, res.Code)
 
-	req, _ = http.NewRequest("POST", "/outbox", nil)
-	res = httptest.NewRecorder()
-	router.ServeHTTP(res, req)
-
+	res = suite.Request("POST", "/outbox", nil)
 	assert.Equal(t, 202, res.Code)
-
-	suite.Teardown()
 }
