@@ -21,9 +21,14 @@ func Router() *mux.Router {
 }
 
 func NotificationHandler(res http.ResponseWriter, req *http.Request) {
+	if req.Method != "POST" {
+		res.WriteHeader(405)
+		return
+	}
+
+	// TODO: check auth token
 	msg := "Hello World\n\nlorem ipsum\ndolor sit amet\n\n-- \nNaveed"
 	go Sendmail("fnd@innoq.com", "fnd@innoq.com", "Hello World", msg)
 
-	// TODO: check auth token
 	res.WriteHeader(202)
 }
