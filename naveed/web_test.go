@@ -31,22 +31,22 @@ func TestNotification(t *testing.T) {
 	assert.Equal(t, "missing recipients", res.Body.String())
 
 	res = submitForm(uri, url.Values{
-		"recipients": {"fnd"},
+		"recipient": {"fnd"},
 	}, suite)
 	assert.Equal(t, 400, res.Code)
 	assert.Equal(t, "missing subject", res.Body.String())
 
 	res = submitForm(uri, url.Values{
-		"subject":    {"Hello World"},
-		"recipients": {"fnd"},
+		"subject":   {"Hello World"},
+		"recipient": {"fnd"},
 	}, suite)
 	assert.Equal(t, 400, res.Code)
 	assert.Equal(t, "missing message body", res.Body.String())
 
 	res = submitForm(uri, url.Values{
-		"subject":    {"Hello World"},
-		"recipients": {"fnd"},
-		"body":       {"lorem ipsum\ndolor sit amet\n\n..."},
+		"subject":   {"Hello World"},
+		"recipient": {"fnd", "st"},
+		"body":      {"lorem ipsum\ndolor sit amet\n\n..."},
 	}, suite)
 	assert.Equal(t, 202, res.Code)
 }

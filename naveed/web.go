@@ -3,6 +3,7 @@ package naveed
 import "github.com/gorilla/mux"
 import "net/http"
 import "fmt"
+import "strings"
 
 func Server(port int) {
 	Router()
@@ -39,8 +40,8 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		res.Write([]byte("missing subject"))
 		return
 	}
-	recipients := req.FormValue("recipients")
-	if recipients == "" {
+	recipients := req.Form["recipient"]
+	if recipients == nil {
 		res.WriteHeader(400)
 		res.Write([]byte("missing recipients"))
 		return
@@ -52,8 +53,15 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	// map handles to addresses
+	// TODO: delegate to separate service (which might include validation)
+	for i, handle := range recipients {
+		recipients[i] = handle + "@innoq.com"
+	}
+	addresses := strings.Join(recipients, ", ")
+
 	// TODO: check auth token
-	go Sendmail("fnd@innoq.com", recipients, subject, body)
+	go Sendmail("fnd@innoq.com", addresses, subject, body)
 
 	res.WriteHeader(202)
 }
