@@ -10,14 +10,19 @@ var Tokens string // XXX: only required for testing
 var Mailx string  // XXX: only required for testing
 
 // returns `nil` if unsuccessful
-// XXX: `sender` currently unused
-func Sendmail(sender string, recipient string, subject string, body string) []byte {
+func Sendmail(recipients []string, subject string, body string) []byte {
+	return dispatch(subject, resolveAddresses(recipients), body)
+}
+
+// mailx wrapper
+func dispatch(subject string, recipients []string, body string) []byte {
 	cmd := "mailx"
 	if Mailx != "" {
 		cmd = Mailx
 	}
 
-	proc := exec.Command(cmd, "-s", subject, recipient)
+	addresses := strings.Join(recipients, ", ")
+	proc := exec.Command(cmd, "-s", subject, addresses)
 
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
@@ -58,4 +63,14 @@ func checkToken(token string) bool { // TODO: cache to avoid file operations?
 		}
 	}
 	return false
+}
+
+// maps handles to e-mail addresses
+// TODO: delegate to separate service (which might include validation)
+func resolveAddresses(handles []string) []string {
+	var addresses []string
+	for _, handle := range handles {
+		addresses = append(addresses, handle + "@innoq.com")
+	}
+	return addresses
 }

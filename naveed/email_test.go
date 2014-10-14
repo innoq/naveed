@@ -10,8 +10,8 @@ func TestSendmail(t *testing.T) {
 
 	var res []byte
 
-	res = Sendmail("fnd@innoq.com", "st@innoq.com, pg@innoq.com",
-		"Hello World", "lorem ipsum\ndolor sit amet\n\n...")
+	res = Sendmail([]string{"st", "pg"}, "Hello World",
+		"lorem ipsum\ndolor sit amet\n\n...")
 	expected := `Subject: Hello World
 To: st@innoq.com, pg@innoq.com
 
@@ -23,7 +23,7 @@ dolor sit amet
 	assert.Equal(t, expected, string(res))
 
 	suite.CaptureStdout() // suppress "ERROR sending e-mail" to avoid confusion
-	res = Sendmail("INVALID", "INVALID", "INVALID", "INVALID")
+	res = Sendmail([]string{"INVALID"}, "INVALID", "INVALID")
 	assert.Nil(t, res)
 	suite.RestoreStdout()
 }
