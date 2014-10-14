@@ -10,15 +10,15 @@ func TestSendmail(t *testing.T) {
 
 	var res []byte
 
-	res = Sendmail([]string{"st", "pg"}, "Hello World",
-		"lorem ipsum\ndolor sit amet\n\n...")
-	expected := `Subject: Hello World
+	res = Sendmail([]string{"st", "pg"}, "Hällo Wörld",
+		"lörem ipsüm\ndolor sit ämet\n\n✓ … ✗")
+	expected := `Subject: Hällo Wörld
 To: st@innoq.com, pg@innoq.com
 
-lorem ipsum
-dolor sit amet
+lörem ipsüm
+dolor sit ämet
 
-...
+✓ … ✗
 `
 	assert.Equal(t, expected, string(res))
 
