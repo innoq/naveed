@@ -11,6 +11,7 @@ var Mailx string  // XXX: only required for testing
 
 // returns `nil` if unsuccessful
 func Sendmail(recipients []string, subject string, body string) []byte {
+	recipients = FilterRecipients(recipients)
 	return dispatch(subject, resolveAddresses(recipients), body)
 }
 
@@ -27,7 +28,7 @@ func dispatch(subject string, recipients []string, body string) []byte {
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
 	io.WriteString(stdin, body)
-	stdin.Close() // TODO: `defer`?
+	stdin.Close()
 
 	out, err := proc.Output()
 	if err == nil {
