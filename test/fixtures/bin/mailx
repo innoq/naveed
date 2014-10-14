@@ -1,10 +1,18 @@
 #!/usr/bin/env sh
 
-while [ -n "$1" ]; do
-	if [ "$1" = "INVALID" ]; then
+for arg in "$@"; do
+	if [ "$arg" = "INVALID" ]; then
 		exit 1
 	fi
-	shift
 done
+
+subject="$2"
+recipients="$3"
+body="`cat`"
+
+echo "Subject: $subject"
+echo "To: $recipients"
+echo
+echo "$body"
 
 exit 0

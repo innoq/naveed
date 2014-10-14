@@ -7,7 +7,7 @@ import "bufio"
 import "io"
 
 var Tokens string // XXX: only required for testing
-var Mailx string // XXX: only required for testing
+var Mailx string  // XXX: only required for testing
 
 // returns `nil` if unsuccessful
 // XXX: `sender` currently unused
