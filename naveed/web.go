@@ -34,7 +34,7 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	token := req.FormValue("token") // TODO: use header instead?
-	if !checkToken(token) { // XXX: belongs into `Sendmail`
+	if !checkToken(token) {         // XXX: belongs into `Sendmail`
 		res.WriteHeader(403)
 		res.Write([]byte("token missing or invalid\n"))
 		return

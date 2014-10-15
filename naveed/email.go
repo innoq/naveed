@@ -71,7 +71,7 @@ func checkToken(token string) bool { // TODO: cache to avoid file operations?
 func resolveAddresses(handles []string) []string {
 	var addresses []string
 	for _, handle := range handles {
-		addresses = append(addresses, handle + "@innoq.com")
+		addresses = append(addresses, handle+"@innoq.com")
 	}
 	return addresses
 }
