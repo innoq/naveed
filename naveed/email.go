@@ -50,10 +50,10 @@ func checkToken(token string) bool { // TODO: cache to avoid file operations?
 	}
 
 	fh, err := os.Open(tokens)
+	defer fh.Close()
 	if err != nil {
 		panic("could not read tokens") // XXX: too crude?
 	}
-	defer fh.Close()
 
 	scanner := bufio.NewScanner(fh)
 	for scanner.Scan() {
