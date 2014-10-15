@@ -9,6 +9,7 @@ import "io"
 
 type TestSuite struct {
 	Router *mux.Router
+	token  string
 	path   string
 	stdout *os.File
 }
@@ -18,10 +19,12 @@ func (suite *TestSuite) Setup() {
 	Tokens = fmt.Sprintf("%s/../test/fixtures/tokens.cfg", pwd)
 	PreferencesDir = fmt.Sprintf("%s/../test/fixtures/preferences", pwd)
 	Mailx = fmt.Sprintf("%s/../test/fixtures/bin/mailx", pwd)
+	suite.token = "9a790fc4-668b-4d19-aa9f-60c8a00d8621"
+
 }
 
 func (suite *TestSuite) Teardown() {
-	// NB: must not reset `Mailx` due to `Sendmail` being invoked as goroutine
+	// NB: must not reset `Mailx` due to it being invoked as goroutine
 }
 
 func (suite *TestSuite) CaptureStdout() {

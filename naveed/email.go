@@ -2,6 +2,7 @@ package naveed
 
 import "os"
 import "os/exec"
+import "errors"
 import "strings"
 import "bufio"
 import "io"
@@ -9,11 +10,16 @@ import "io"
 var Tokens string // XXX: only required for testing
 var Mailx string  // XXX: only required for testing
 
-// returns `nil` if unsuccessful
-// XXX: return value is only the full message when testing with the mock
-func Sendmail(recipients []string, subject string, body string) (msg []byte) {
-	recipients = FilterRecipients(recipients)
-	return dispatch(subject, resolveAddresses(recipients), body)
+func Sendmail(recipients []string, subject string, body string,
+	token string) []string {
+	app, err := checkToken(token)
+	if err != nil {
+		return nil // TODO: use proper error?
+	}
+
+	recipients = FilterRecipients(recipients, app)
+	go dispatch(subject, resolveAddresses(recipients), body)
+	return recipients
 }
 
 // mailx wrapper
@@ -40,9 +46,9 @@ func dispatch(subject string, recipients []string, body string) (output []byte) 
 	}
 }
 
-func checkToken(token string) (valid bool) { // TODO: cache to avoid file operations?
-	if token == "" {
-		return false
+func checkToken(token string) (app string, err error) { // TODO: cache to avoid file operations?
+	if token == "" { // XXX: optimization; duplicates last line
+		return "", errors.New("invalid token")
 	}
 
 	tokens := "tokens.cfg"
@@ -53,18 +59,20 @@ func checkToken(token string) (valid bool) { // TODO: cache to avoid file operat
 	fh, err := os.Open(tokens)
 	defer fh.Close()
 	if err != nil {
-		panic("could not read tokens") // XXX: too crude?
+		return "", errors.New("could not read tokens")
 	}
 
 	scanner := bufio.NewScanner(fh)
 	for scanner.Scan() {
 		line := scanner.Text()
 		candidate := strings.SplitN(line, " #", 2)
-		if candidate[0] == token {
-			return true
+		secret := strings.TrimSpace(candidate[0])
+		app := strings.TrimSpace(candidate[1])
+		if token == secret {
+			return app, nil
 		}
 	}
-	return false
+	return "", errors.New("invalid token")
 }
 
 // maps handles to e-mail addresses

@@ -1,18 +1,3 @@
 #!/usr/bin/env sh
 
-for arg in "$@"; do
-	if [ "$arg" = "INVALID" ]; then
-		exit 1
-	fi
-done
-
-subject="$2"
-recipients="$3"
-body="`cat`"
-
-echo "Subject: $subject"
-echo "To: $recipients"
-echo
-echo "$body"
-
 exit 0

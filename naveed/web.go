@@ -33,12 +33,6 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	token := req.FormValue("token") // TODO: use header instead?
-	if !checkToken(token) {         // XXX: belongs into `Sendmail`
-		res.WriteHeader(403)
-		res.Write([]byte("token missing or invalid\n"))
-		return
-	}
 	subject := req.FormValue("subject")
 	if subject == "" {
 		res.WriteHeader(400)
@@ -57,7 +51,12 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		res.Write([]byte("missing message body\n"))
 		return
 	}
+	token := req.FormValue("token") // TODO: use header instead?
+	if Sendmail(recipients, subject, body, token) == nil {
+		res.WriteHeader(403)
+		res.Write([]byte("token missing or invalid\n"))
+		return
+	}
 
-	go Sendmail(recipients, subject, body)
 	res.WriteHeader(202)
 }

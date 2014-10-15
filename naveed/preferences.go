@@ -8,9 +8,9 @@ import "bufio"
 var PreferencesDir string // XXX: only required for testing
 
 // discard recipients that have disabled notifications in their preferences
-func FilterRecipients(recipients []string) []string {
+func FilterRecipients(recipients []string, app string) []string {
 	for i, recipient := range recipients {
-		if isSuppressed(recipient, "default") {
+		if isSuppressed(recipient, app) {
 			recipients = append(recipients[:i], recipients[i+1:]...)
 		}
 	}
@@ -40,8 +40,8 @@ func readSettings(filePath string, delimiter string) map[string]string {
 	for scanner.Scan() {
 		line := scanner.Text()
 		items := strings.SplitN(line, delimiter, 2)
-		key := items[0]
-		value := items[1]
+		key := strings.TrimSpace(items[0])
+		value := strings.TrimSpace(items[1])
 		settings[key] = value
 	}
 
