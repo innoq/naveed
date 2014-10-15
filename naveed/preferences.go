@@ -17,7 +17,7 @@ func FilterRecipients(recipients []string) []string {
 	return recipients
 }
 
-func isSuppressed(handle string, app string) bool {
+func isSuppressed(handle string, app string) (suppressed bool) {
 	filePath := path.Join(PreferencesDir, handle)
 	settings := readSettings(filePath, ": ")
 	if settings == nil {

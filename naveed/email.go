@@ -10,13 +10,14 @@ var Tokens string // XXX: only required for testing
 var Mailx string  // XXX: only required for testing
 
 // returns `nil` if unsuccessful
-func Sendmail(recipients []string, subject string, body string) []byte {
+// XXX: return value is only the full message when testing with the mock
+func Sendmail(recipients []string, subject string, body string) (msg []byte) {
 	recipients = FilterRecipients(recipients)
 	return dispatch(subject, resolveAddresses(recipients), body)
 }
 
 // mailx wrapper
-func dispatch(subject string, recipients []string, body string) []byte {
+func dispatch(subject string, recipients []string, body string) (output []byte) {
 	cmd := "mailx"
 	if Mailx != "" {
 		cmd = Mailx
@@ -30,16 +31,16 @@ func dispatch(subject string, recipients []string, body string) []byte {
 	io.WriteString(stdin, body)
 	stdin.Close()
 
-	out, err := proc.Output()
+	output, err = proc.Output()
 	if err == nil {
-		return out
+		return
 	} else {
 		ReportError(err, "sending e-mail")
 		return nil
 	}
 }
 
-func checkToken(token string) bool { // TODO: cache to avoid file operations?
+func checkToken(token string) (valid bool) { // TODO: cache to avoid file operations?
 	if token == "" {
 		return false
 	}
@@ -68,10 +69,9 @@ func checkToken(token string) bool { // TODO: cache to avoid file operations?
 
 // maps handles to e-mail addresses
 // TODO: delegate to separate service (which might include validation)
-func resolveAddresses(handles []string) []string {
-	var addresses []string
+func resolveAddresses(handles []string) (addresses []string) {
 	for _, handle := range handles {
 		addresses = append(addresses, handle+"@innoq.com")
 	}
-	return addresses
+	return
 }
