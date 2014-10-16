@@ -29,6 +29,7 @@ func FrontpageHandler(res http.ResponseWriter, req *http.Request) {
 	handle := req.Header.Get("REMOTE_USER")
 	if handle == "" {
 		res.WriteHeader(404) // FIXME: this is almost offensively wrong
+		return
 	}
 
 	http.Redirect(res, req, "/preferences/"+handle, http.StatusFound)
@@ -45,7 +46,8 @@ func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	filePath := path.Join(PreferencesDir, handle) // XXX: duplicates `isSuppressed`
+	// XXX: duplicates `isSuppressed`
+	filePath := path.Join(PreferencesDir, handle)
 	preferences, err := ReadSettings(filePath, ": ")
 	if err != nil {
 		preferences = map[string]string{}
