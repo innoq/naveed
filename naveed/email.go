@@ -1,16 +1,14 @@
 package naveed
 
 import "os/exec"
-import "errors"
 import "strings"
 import "io"
 
-var Tokens string // XXX: only required for testing
-var Mailx string  // XXX: only required for testing
+var Mailx string // XXX: only required for testing
 
 func Sendmail(recipients []string, subject string, body string,
 	token string) []string {
-	app, err := checkToken(token)
+	app, err := CheckAppToken(token)
 	if err != nil {
 		return nil // TODO: use proper error?
 	}
@@ -42,29 +40,6 @@ func dispatch(subject string, recipients []string, body string) (output []byte) 
 		ReportError(err, "sending e-mail")
 		return nil
 	}
-}
-
-func checkToken(token string) (app string, err error) { // TODO: cache to avoid file operations?
-	if token == "" { // XXX: optimization; duplicates last line
-		return "", errors.New("invalid token")
-	}
-
-	tokens := "tokens.cfg"
-	if Tokens != "" {
-		tokens = Tokens
-	}
-
-	appsByToken, err := ReadSettings(tokens, " #")
-	if err != nil {
-		return "", errors.New("could not read tokens")
-	}
-
-	for secret, app := range appsByToken {
-		if token == secret {
-			return app, nil
-		}
-	}
-	return "", errors.New("invalid token")
 }
 
 // maps handles to e-mail addresses
