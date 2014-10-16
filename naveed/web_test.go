@@ -58,7 +58,7 @@ func TestNotification(t *testing.T) {
 	assert.Equal(t, "invalid credentials\n", res.Body.String())
 
 	res = suite.Request("POST", uri, nil, map[string]string{
-		"Authorization": "Bearer "+suite.token,
+		"Authorization": "Bearer " + suite.token,
 	})
 	assert.Equal(t, 400, res.Code)
 	assert.Equal(t, "invalid form data\n", res.Body.String())
@@ -94,8 +94,8 @@ func submitForm(uri string, data url.Values, suite *TestSuite) *httptest.
 	ResponseRecorder {
 	body := strings.NewReader(data.Encode())
 	res := suite.Request("POST", uri, body, map[string]string{
-		"Authorization": "Bearer "+suite.token,
-		"Content-Type": formContentType,
+		"Authorization": "Bearer " + suite.token,
+		"Content-Type":  formContentType,
 	})
 	return res
 }

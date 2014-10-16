@@ -116,5 +116,5 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 
 func respond(res http.ResponseWriter, status int, body string) {
 	res.WriteHeader(status)
-	res.Write([]byte(body+"\n"))
+	res.Write([]byte(body + "\n"))
 }
