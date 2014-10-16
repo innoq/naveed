@@ -8,10 +8,34 @@ import "strings"
 
 const formContentType = "application/x-www-form-urlencoded"
 
+var suite *TestSuite
+
+func TestPreferences(t *testing.T) {
+	spawnSuite()
+	defer suite.Teardown()
+
+	var expected string
+	var res *httptest.ResponseRecorder
+
+	res = suite.Request("GET", "/preferences/johndoe", nil, "")
+	assert.Equal(t, 200, res.Code)
+	expected = `✓ dummyapp
+✓ randomapp
+✓ sampleapp
+`
+	assert.Equal(t, expected, res.Body.String())
+
+	res = suite.Request("GET", "/preferences/bn", nil, "")
+	assert.Equal(t, 200, res.Code)
+	expected = `✗ dummyapp
+✓ randomapp
+✓ sampleapp
+`
+	assert.Equal(t, expected, res.Body.String())
+}
+
 func TestNotification(t *testing.T) {
-	suite := new(TestSuite)
-	suite.Router = Router()
-	suite.Setup()
+	spawnSuite()
 	defer suite.Teardown()
 
 	uri := "/outbox"
@@ -60,4 +84,13 @@ func submitForm(uri string, data url.Values, suite *TestSuite) *httptest.
 	body := strings.NewReader(data.Encode())
 	res := suite.Request("POST", uri, body, formContentType)
 	return res
+}
+
+// NB: relies on global to avoid multiple registrations error in HTTP routing
+func spawnSuite() {
+	if suite == nil {
+		suite = new(TestSuite)
+		suite.Router = Router()
+	}
+	suite.Setup()
 }

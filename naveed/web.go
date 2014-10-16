@@ -3,6 +3,8 @@ package naveed
 import "github.com/gorilla/mux"
 import "net/http"
 import "fmt"
+import "path"
+import "sort"
 
 func Server(port int) {
 	Router()
@@ -15,9 +17,42 @@ func Server(port int) {
 
 func Router() *mux.Router {
 	router := mux.NewRouter()
+	router.HandleFunc("/preferences/{handle}", PreferencesHandler)
 	router.HandleFunc("/outbox", NotificationHandler)
 	http.Handle("/", router)
 	return router
+}
+
+func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
+	params := mux.Vars(req)
+	handle := params["handle"]
+
+	appsByToken, err := ReadAppTokens()
+	if err != nil {
+		res.WriteHeader(500)
+		res.Write([]byte("unexpected error\n"))
+		return
+	}
+
+	filePath := path.Join(PreferencesDir, handle) // XXX: duplicates `isSuppressed`
+	preferences, err := ReadSettings(filePath, ": ")
+	if err != nil {
+		preferences = map[string]string{}
+	}
+
+	var apps []string
+	for _, app := range appsByToken {
+		apps = append(apps, app)
+	}
+	sort.Strings(apps)
+
+	for _, app := range apps {
+		icon := "✓"
+		if preferences[app] == "suppressed" { // XXX: duplicates `isSuppressed`
+			icon = "✗"
+		}
+		res.Write([]byte(icon + " " + app + "\n"))
+	}
 }
 
 func NotificationHandler(res http.ResponseWriter, req *http.Request) {
@@ -51,7 +86,7 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		res.Write([]byte("missing message body\n"))
 		return
 	}
-	token := req.FormValue("token") // TODO: use header instead?
+	token := req.FormValue("token") // TODO: use `Authorization: Bearer ...` header
 	if Sendmail(recipients, subject, body, token) == nil {
 		res.WriteHeader(403)
 		res.Write([]byte("token missing or invalid\n"))
