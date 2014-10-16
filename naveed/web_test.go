@@ -54,25 +54,28 @@ func TestNotification(t *testing.T) {
 	assert.Equal(t, 405, res.Code)
 
 	res = suite.Request("POST", uri, nil, nil)
+	assert.Equal(t, 403, res.Code)
+	assert.Equal(t, "invalid credentials\n", res.Body.String())
+
+	res = suite.Request("POST", uri, nil, map[string]string{
+		"Authorization": "Bearer "+suite.token,
+	})
 	assert.Equal(t, 400, res.Code)
 	assert.Equal(t, "invalid form data\n", res.Body.String())
 
 	res = submitForm(uri, url.Values{
-		"token":   {suite.token},
 		"subject": {"Hello World"},
 	}, suite)
 	assert.Equal(t, 400, res.Code)
 	assert.Equal(t, "missing recipients\n", res.Body.String())
 
 	res = submitForm(uri, url.Values{
-		"token":     {suite.token},
 		"recipient": {"fnd"},
 	}, suite)
 	assert.Equal(t, 400, res.Code)
 	assert.Equal(t, "missing subject\n", res.Body.String())
 
 	res = submitForm(uri, url.Values{
-		"token":     {suite.token},
 		"subject":   {"Hello World"},
 		"recipient": {"fnd"},
 	}, suite)
@@ -80,7 +83,6 @@ func TestNotification(t *testing.T) {
 	assert.Equal(t, "missing message body\n", res.Body.String())
 
 	res = submitForm(uri, url.Values{
-		"token":     {suite.token},
 		"subject":   {"Hello World"},
 		"recipient": {"fnd", "st"},
 		"body":      {"lorem ipsum\ndolor sit amet\n\n..."},
@@ -92,6 +94,7 @@ func submitForm(uri string, data url.Values, suite *TestSuite) *httptest.
 	ResponseRecorder {
 	body := strings.NewReader(data.Encode())
 	res := suite.Request("POST", uri, body, map[string]string{
+		"Authorization": "Bearer "+suite.token,
 		"Content-Type": formContentType,
 	})
 	return res

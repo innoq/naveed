@@ -5,6 +5,7 @@ import "net/http"
 import "fmt"
 import "path"
 import "sort"
+import "strings"
 
 func Server(port int) {
 	Router()
@@ -71,6 +72,19 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	var scheme string
+	var token string
+	auth := req.Header.Get("Authorization")
+	items := strings.SplitN(auth, " ", 2)
+	if len(items) == 2 {
+		scheme = items[0]
+		token = items[1]
+	}
+	if scheme != "Bearer" {
+		respond(res, 403, "invalid credentials")
+		return
+	}
+
 	err := req.ParseForm()
 	if err != nil {
 		respond(res, 400, "invalid form data")
@@ -92,12 +106,11 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		respond(res, 400, "missing message body")
 		return
 	}
-	token := req.FormValue("token") // TODO: use `Authorization: Bearer ...` header
+
 	if Sendmail(recipients, subject, body, token) == nil {
 		respond(res, 403, "invalid credentials")
 		return
 	}
-
 	res.WriteHeader(202)
 }
 
