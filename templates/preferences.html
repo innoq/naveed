@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Naveed</title>
+</head>
+
+<body>
+	<h1>Naveed</h1>
+
+	<form>
+		{{range $i, $provider := .}}
+		<fieldset>
+			<legend>{{.Name}}</legend>
+			<label>
+				{{if .Muted}}
+				<input type="checkbox" checked>
+				{{else}}
+				<input type="checkbox">
+				{{end}}
+				muted
+			<label>
+		</fieldset>
+		{{end}}
+	</form>
+
+</body>
+
+</html>

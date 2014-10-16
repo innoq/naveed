@@ -19,9 +19,9 @@ func (suite *TestSuite) Setup() {
 	root := path.Join(pwd, "..", "test", "fixtures")
 	Tokens = path.Join(root, "tokens.cfg")
 	PreferencesDir = path.Join(root, "preferences")
+	TemplatesDir = path.Join("..", DefaultTemplatesDir)
 	Mailx = path.Join(root, "bin", "mailx")
 	suite.token = "9a790fc4-668b-4d19-aa9f-60c8a00d8621"
-
 }
 
 func (suite *TestSuite) Teardown() {

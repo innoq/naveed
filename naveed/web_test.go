@@ -14,7 +14,6 @@ func TestPreferences(t *testing.T) {
 	spawnSuite()
 	defer suite.Teardown()
 
-	var expected string
 	var res *httptest.ResponseRecorder
 
 	res = suite.Request("GET", "/", nil, nil)
@@ -28,19 +27,23 @@ func TestPreferences(t *testing.T) {
 
 	res = suite.Request("GET", "/preferences/johndoe", nil, nil)
 	assert.Equal(t, 200, res.Code)
-	expected = `✓ dummyapp
-✓ randomapp
-✓ sampleapp
-`
-	assert.Equal(t, expected, res.Body.String())
+	// TODO: parse HTML
+	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
+		`<legend>dummyapp</legend><label><input type="checkbox">`))
+	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
+		`<legend>randomapp</legend><label><input type="checkbox">`))
+	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
+		`<legend>sampleapp</legend><label><input type="checkbox">`))
 
 	res = suite.Request("GET", "/preferences/bn", nil, nil)
 	assert.Equal(t, 200, res.Code)
-	expected = `✗ dummyapp
-✓ randomapp
-✓ sampleapp
-`
-	assert.Equal(t, expected, res.Body.String())
+	// TODO: parse HTML
+	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
+		`<legend>dummyapp</legend><label><input type="checkbox" checked>`))
+	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
+		`<legend>randomapp</legend><label><input type="checkbox">`))
+	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
+		`<legend>sampleapp</legend><label><input type="checkbox">`))
 }
 
 func TestNotification(t *testing.T) {
@@ -107,4 +110,10 @@ func spawnSuite() {
 		suite.Router = Router()
 	}
 	suite.Setup()
+}
+
+func compact(str string) string {
+	str = strings.Replace(str, "\n", "", -1)
+	str = strings.Replace(str, "\t", "", -1)
+	return str
 }

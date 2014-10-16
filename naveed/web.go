@@ -1,11 +1,20 @@
 package naveed
 
 import "github.com/gorilla/mux"
+import "html/template"
 import "net/http"
 import "fmt"
 import "path"
 import "sort"
 import "strings"
+
+const DefaultTemplatesDir = "templates"
+var TemplatesDir string // XXX: only required for testing
+
+type provider struct {
+	Name  string
+	Muted bool
+}
 
 func Server(port int) {
 	Router()
@@ -59,13 +68,18 @@ func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
 	}
 	sort.Strings(apps)
 
+	var providers []*provider
 	for _, app := range apps {
-		icon := "✓"
+		prov := new(provider)
+		prov.Name = app
+		prov.Muted = false
 		if preferences[app] == "suppressed" { // XXX: duplicates `isSuppressed`
-			icon = "✗"
+			prov.Muted = true
 		}
-		res.Write([]byte(icon + " " + app + "\n"))
+		providers = append(providers, prov)
 	}
+
+	render(res, "preferences", providers)
 }
 
 func NotificationHandler(res http.ResponseWriter, req *http.Request) {
@@ -114,6 +128,14 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 	res.WriteHeader(202)
+}
+
+func render(res http.ResponseWriter, view string, data interface{}) {
+	if TemplatesDir == "" {
+		TemplatesDir = DefaultTemplatesDir
+	}
+	tmpl, _ := template.ParseFiles(path.Join(TemplatesDir, view + ".html"))
+	tmpl.Execute(res, data)
 }
 
 func respond(res http.ResponseWriter, status int, body string) {
