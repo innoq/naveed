@@ -73,35 +73,35 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 
 	err := req.ParseForm()
 	if err != nil {
-		res.WriteHeader(400)
-		res.Write([]byte("invalid form data\n"))
+		respond(res, 400, "invalid form data")
 		return
 	}
 
 	subject := req.FormValue("subject")
 	if subject == "" {
-		res.WriteHeader(400)
-		res.Write([]byte("missing subject\n"))
+		respond(res, 400, "missing subject")
 		return
 	}
 	recipients := req.Form["recipient"]
 	if recipients == nil {
-		res.WriteHeader(400)
-		res.Write([]byte("missing recipients\n"))
+		respond(res, 400, "missing recipients")
 		return
 	}
 	body := req.FormValue("body") // TODO: rename?
 	if body == "" {
-		res.WriteHeader(400)
-		res.Write([]byte("missing message body\n"))
+		respond(res, 400, "missing message body")
 		return
 	}
 	token := req.FormValue("token") // TODO: use `Authorization: Bearer ...` header
 	if Sendmail(recipients, subject, body, token) == nil {
-		res.WriteHeader(403)
-		res.Write([]byte("token missing or invalid\n"))
+		respond(res, 403, "invalid credentials")
 		return
 	}
 
 	res.WriteHeader(202)
+}
+
+func respond(res http.ResponseWriter, status int, body string) {
+	res.WriteHeader(status)
+	res.Write([]byte(body+"\n"))
 }
