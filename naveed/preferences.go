@@ -1,9 +1,6 @@
 package naveed
 
-import "os"
 import "path"
-import "strings"
-import "bufio"
 
 var PreferencesDir string // XXX: only required for testing
 
@@ -19,31 +16,9 @@ func FilterRecipients(recipients []string, app string) []string {
 
 func isSuppressed(handle string, app string) (suppressed bool) {
 	filePath := path.Join(PreferencesDir, handle)
-	settings := readSettings(filePath, ": ")
-	if settings == nil {
+	settings, err := ReadSettings(filePath, ": ")
+	if err != nil {
 		return false
 	}
 	return settings[app] == "suppressed"
-}
-
-// reads settings files where each line contains a key/value pair
-func readSettings(filePath string, delimiter string) map[string]string {
-	settings := map[string]string{}
-
-	fh, err := os.Open(filePath)
-	defer fh.Close()
-	if err != nil {
-		return nil // TODO: use proper error?
-	}
-
-	scanner := bufio.NewScanner(fh)
-	for scanner.Scan() {
-		line := scanner.Text()
-		items := strings.SplitN(line, delimiter, 2)
-		key := strings.TrimSpace(items[0])
-		value := strings.TrimSpace(items[1])
-		settings[key] = value
-	}
-
-	return settings
 }

@@ -1,10 +1,8 @@
 package naveed
 
-import "os"
 import "os/exec"
 import "errors"
 import "strings"
-import "bufio"
 import "io"
 
 var Tokens string // XXX: only required for testing
@@ -56,18 +54,12 @@ func checkToken(token string) (app string, err error) { // TODO: cache to avoid 
 		tokens = Tokens
 	}
 
-	fh, err := os.Open(tokens)
-	defer fh.Close()
+	appsByToken, err := ReadSettings(tokens, " #")
 	if err != nil {
 		return "", errors.New("could not read tokens")
 	}
 
-	scanner := bufio.NewScanner(fh)
-	for scanner.Scan() {
-		line := scanner.Text()
-		candidate := strings.SplitN(line, " #", 2)
-		secret := strings.TrimSpace(candidate[0])
-		app := strings.TrimSpace(candidate[1])
+	for secret, app := range appsByToken {
 		if token == secret {
 			return app, nil
 		}
