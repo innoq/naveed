@@ -17,10 +17,20 @@ func Server(port int) {
 
 func Router() *mux.Router {
 	router := mux.NewRouter()
+	router.HandleFunc("/", FrontpageHandler)
 	router.HandleFunc("/preferences/{handle}", PreferencesHandler)
 	router.HandleFunc("/outbox", NotificationHandler)
 	http.Handle("/", router)
 	return router
+}
+
+func FrontpageHandler(res http.ResponseWriter, req *http.Request) {
+	handle := req.Header.Get("REMOTE_USER")
+	if handle == "" {
+		res.WriteHeader(404) // FIXME: this is almost offensively wrong
+	}
+
+	http.Redirect(res, req, "/preferences/"+handle, http.StatusFound)
 }
 
 func PreferencesHandler(res http.ResponseWriter, req *http.Request) {

@@ -17,7 +17,16 @@ func TestPreferences(t *testing.T) {
 	var expected string
 	var res *httptest.ResponseRecorder
 
-	res = suite.Request("GET", "/preferences/johndoe", nil, "")
+	res = suite.Request("GET", "/", nil, nil)
+	assert.Equal(t, 404, res.Code)
+
+	res = suite.Request("GET", "/", nil, map[string]string{
+		"REMOTE_USER": "johndoe",
+	})
+	assert.Equal(t, 302, res.Code)
+	assert.Equal(t, "/preferences/johndoe", res.Header()["Location"][0])
+
+	res = suite.Request("GET", "/preferences/johndoe", nil, nil)
 	assert.Equal(t, 200, res.Code)
 	expected = `✓ dummyapp
 ✓ randomapp
@@ -25,7 +34,7 @@ func TestPreferences(t *testing.T) {
 `
 	assert.Equal(t, expected, res.Body.String())
 
-	res = suite.Request("GET", "/preferences/bn", nil, "")
+	res = suite.Request("GET", "/preferences/bn", nil, nil)
 	assert.Equal(t, 200, res.Code)
 	expected = `✗ dummyapp
 ✓ randomapp
@@ -41,10 +50,10 @@ func TestNotification(t *testing.T) {
 	uri := "/outbox"
 	var res *httptest.ResponseRecorder
 
-	res = suite.Request("GET", uri, nil, "")
+	res = suite.Request("GET", uri, nil, nil)
 	assert.Equal(t, 405, res.Code)
 
-	res = suite.Request("POST", uri, nil, "")
+	res = suite.Request("POST", uri, nil, nil)
 	assert.Equal(t, 400, res.Code)
 	assert.Equal(t, "invalid form data\n", res.Body.String())
 
@@ -82,7 +91,9 @@ func TestNotification(t *testing.T) {
 func submitForm(uri string, data url.Values, suite *TestSuite) *httptest.
 	ResponseRecorder {
 	body := strings.NewReader(data.Encode())
-	res := suite.Request("POST", uri, body, formContentType)
+	res := suite.Request("POST", uri, body, map[string]string{
+		"Content-Type": formContentType,
+	})
 	return res
 }
 

@@ -41,13 +41,13 @@ func (suite *TestSuite) RestoreStdout() {
 // TODO: improve signature to make `body` and `contentType` optional and allow
 // for automatic form data conversion
 func (suite *TestSuite) Request(method string, uri string, body io.Reader,
-	contentType string) *httptest.ResponseRecorder {
+	headers map[string]string) *httptest.ResponseRecorder {
 	if suite.Router == nil {
 		panic("router unset")
 	}
 	req, _ := http.NewRequest(method, uri, body)
-	if contentType != "" {
-		req.Header.Set("Content-Type", contentType)
+	for key, value := range headers {
+		req.Header.Set(key, value)
 	}
 	res := httptest.NewRecorder()
 	suite.Router.ServeHTTP(res, req)
