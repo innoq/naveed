@@ -18,8 +18,8 @@ func FilterRecipients(recipients []string, app string) []string {
 }
 
 // XXX: ambiguous contract; it's not obvious that booleans refer to muting
-func WritePreferences(handle string, preferences map[string]bool) (err error) {
-	filePath := path.Join(PreferencesDir, handle)
+func WritePreferences(user string, preferences map[string]bool) (err error) {
+	filePath := path.Join(PreferencesDir, user)
 	fh, err := os.Create(filePath)
 	defer fh.Close()
 	if err != nil {
@@ -37,8 +37,8 @@ func WritePreferences(handle string, preferences map[string]bool) (err error) {
 	return
 }
 
-func isMuted(handle string, app string) (muted bool) {
-	filePath := path.Join(PreferencesDir, handle)
+func isMuted(user string, app string) (muted bool) {
+	filePath := path.Join(PreferencesDir, user)
 	settings, err := ReadSettings(filePath, ": ")
 	if err != nil {
 		return false

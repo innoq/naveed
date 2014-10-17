@@ -42,11 +42,11 @@ func dispatch(subject string, recipients []string, body string) (output []byte) 
 	}
 }
 
-// maps handles to e-mail addresses
+// maps user handles to e-mail addresses
 // TODO: delegate to separate service (which might include validation)
-func resolveAddresses(handles []string) (addresses []string) {
-	for _, handle := range handles {
-		addresses = append(addresses, handle+"@innoq.com")
+func resolveAddresses(users []string) (addresses []string) {
+	for _, user := range users {
+		addresses = append(addresses, user+"@innoq.com")
 	}
 	return
 }

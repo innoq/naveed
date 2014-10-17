@@ -29,28 +29,28 @@ func Server(port int) {
 func Router() *mux.Router {
 	router := mux.NewRouter()
 	router.HandleFunc("/", FrontpageHandler)
-	router.HandleFunc("/preferences/{handle}", PreferencesHandler)
+	router.HandleFunc("/preferences/{user}", PreferencesHandler)
 	router.HandleFunc("/outbox", NotificationHandler)
 	http.Handle("/", router)
 	return router
 }
 
 func FrontpageHandler(res http.ResponseWriter, req *http.Request) {
-	handle := req.Header.Get("REMOTE_USER")
-	if handle == "" {
+	user := req.Header.Get("REMOTE_USER")
+	if user == "" {
 		res.WriteHeader(404) // FIXME: this is almost offensively wrong
 		return
 	}
 
-	http.Redirect(res, req, "/preferences/"+handle, http.StatusFound)
+	http.Redirect(res, req, "/preferences/"+user, http.StatusFound)
 }
 
 func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
-	handle := params["handle"]
+	user := params["user"]
 
 	if req.Method == "POST" {
-		updatePreferences(handle, res, req)
+		updatePreferences(user, res, req)
 		return
 	}
 
@@ -61,7 +61,7 @@ func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	// XXX: duplicates `isMuted`
-	filePath := path.Join(PreferencesDir, handle)
+	filePath := path.Join(PreferencesDir, user)
 	preferences, err := ReadSettings(filePath, ": ")
 	if err != nil {
 		preferences = map[string]string{}
@@ -87,7 +87,7 @@ func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
 	render(res, "preferences", providers)
 }
 
-func updatePreferences(handle string, res http.ResponseWriter, req *http.Request) {
+func updatePreferences(user string, res http.ResponseWriter, req *http.Request) {
 	var err error
 
 	err = req.ParseForm()
@@ -101,11 +101,11 @@ func updatePreferences(handle string, res http.ResponseWriter, req *http.Request
 		preferences[app] = setting[0] == "muted"
 	}
 
-	err = WritePreferences(handle, preferences)
+	err = WritePreferences(user, preferences)
 	if err != nil {
 		respond(res, 500, "unexpected error")
 	}
-	http.Redirect(res, req, "/preferences/"+handle, http.StatusFound)
+	http.Redirect(res, req, "/preferences/"+user, http.StatusFound)
 }
 
 func NotificationHandler(res http.ResponseWriter, req *http.Request) {
