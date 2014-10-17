@@ -49,10 +49,14 @@ func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
 	params := mux.Vars(req)
 	handle := params["handle"]
 
+	if req.Method == "POST" {
+		updatePreferences(handle, res, req)
+		return
+	}
+
 	appsByToken, err := ReadAppTokens()
 	if err != nil {
-		res.WriteHeader(500)
-		res.Write([]byte("unexpected error\n"))
+		respond(res, 500, "unexpected error")
 		return
 	}
 
@@ -81,6 +85,27 @@ func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
 	}
 
 	render(res, "preferences", providers)
+}
+
+func updatePreferences(handle string, res http.ResponseWriter, req *http.Request) {
+	var err error
+
+	err = req.ParseForm()
+	if err != nil {
+		respond(res, 400, "invalid form data")
+		return
+	}
+
+	preferences := map[string]bool{}
+	for app, setting := range req.Form {
+		preferences[app] = setting[0] == "muted"
+	}
+
+	err = WritePreferences(handle, preferences)
+	if err != nil {
+		respond(res, 500, "unexpected error")
+	}
+	http.Redirect(res, req, "/preferences/"+handle, http.StatusFound)
 }
 
 func NotificationHandler(res http.ResponseWriter, req *http.Request) {

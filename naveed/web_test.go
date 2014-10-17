@@ -29,21 +29,23 @@ func TestPreferences(t *testing.T) {
 	assert.Equal(t, 200, res.Code)
 	// TODO: parse HTML
 	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
-		`<legend>dummyapp</legend><label><input type="checkbox">`))
+		`<legend>dummyapp</legend><label><input type="checkbox" name="dummyapp" value="muted">`))
 	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
-		`<legend>randomapp</legend><label><input type="checkbox">`))
+		`<legend>randomapp</legend><label><input type="checkbox" name="randomapp" value="muted">`))
 	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
-		`<legend>sampleapp</legend><label><input type="checkbox">`))
+		`<legend>sampleapp</legend><label><input type="checkbox" name="sampleapp" value="muted">`))
 
 	res = suite.Request("GET", "/preferences/bn", nil, nil)
 	assert.Equal(t, 200, res.Code)
 	// TODO: parse HTML
 	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
-		`<legend>dummyapp</legend><label><input type="checkbox" checked>`))
+		`<legend>dummyapp</legend><label><input type="checkbox" name="dummyapp" value="muted" checked>`))
 	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
-		`<legend>randomapp</legend><label><input type="checkbox">`))
+		`<legend>randomapp</legend><label><input type="checkbox" name="randomapp" value="muted">`))
 	assert.Equal(t, true, strings.Contains(compact(res.Body.String()),
-		`<legend>sampleapp</legend><label><input type="checkbox">`))
+		`<legend>sampleapp</legend><label><input type="checkbox" name="sampleapp" value="muted">`))
+
+	// TODO: test POST handler
 }
 
 func TestNotification(t *testing.T) {

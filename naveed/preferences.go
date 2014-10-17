@@ -1,6 +1,9 @@
 package naveed
 
+import "os"
+import "errors"
 import "path"
+import "bufio"
 
 var PreferencesDir string // XXX: only required for testing
 
@@ -12,6 +15,26 @@ func FilterRecipients(recipients []string, app string) []string {
 		}
 	}
 	return recipients
+}
+
+// XXX: ambiguous contract; it's not obvious that booleans refer to muting
+func WritePreferences(handle string, preferences map[string]bool) (err error) {
+	filePath := path.Join(PreferencesDir, handle)
+	fh, err := os.Create(filePath)
+	defer fh.Close()
+	if err != nil {
+		return errors.New("could not store preferences")
+	}
+
+	buffer := bufio.NewWriter(fh)
+	defer buffer.Flush()
+	for app, muted := range preferences {
+		if muted {
+			buffer.Write([]byte(app + ": muted\n"))
+		}
+	}
+
+	return
 }
 
 func isMuted(handle string, app string) (muted bool) {

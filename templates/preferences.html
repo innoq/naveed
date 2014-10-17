@@ -9,20 +9,21 @@
 <body>
 	<h1>Naveed</h1>
 
-	<form>
+	<form method="post">
 		{{range $i, $provider := .}}
 		<fieldset>
 			<legend>{{.Name}}</legend>
 			<label>
 				{{if .Muted}}
-				<input type="checkbox" checked>
+				<input type="checkbox" name="{{.Name}}" value="muted" checked>
 				{{else}}
-				<input type="checkbox">
+				<input type="checkbox" name="{{.Name}}" value="muted">
 				{{end}}
 				muted
 			<label>
 		</fieldset>
 		{{end}}
+		<input type="submit">
 	</form>
 
 </body>
