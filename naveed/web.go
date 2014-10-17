@@ -9,6 +9,7 @@ import "sort"
 import "strings"
 
 const DefaultTemplatesDir = "templates"
+
 var TemplatesDir string // XXX: only required for testing
 
 type provider struct {
@@ -55,7 +56,7 @@ func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// XXX: duplicates `isSuppressed`
+	// XXX: duplicates `isMuted`
 	filePath := path.Join(PreferencesDir, handle)
 	preferences, err := ReadSettings(filePath, ": ")
 	if err != nil {
@@ -73,7 +74,7 @@ func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
 		prov := new(provider)
 		prov.Name = app
 		prov.Muted = false
-		if preferences[app] == "suppressed" { // XXX: duplicates `isSuppressed`
+		if preferences[app] == "muted" { // XXX: duplicates `isMuted`
 			prov.Muted = true
 		}
 		providers = append(providers, prov)
@@ -134,7 +135,7 @@ func render(res http.ResponseWriter, view string, data interface{}) {
 	if TemplatesDir == "" {
 		TemplatesDir = DefaultTemplatesDir
 	}
-	tmpl, _ := template.ParseFiles(path.Join(TemplatesDir, view + ".html"))
+	tmpl, _ := template.ParseFiles(path.Join(TemplatesDir, view+".html"))
 	tmpl.Execute(res, data)
 }
 
