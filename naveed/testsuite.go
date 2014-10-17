@@ -3,7 +3,7 @@ package naveed
 import "github.com/gorilla/mux"
 import "net/http"
 import "net/http/httptest"
-import "fmt"
+import "path"
 import "os"
 import "io"
 
@@ -16,9 +16,10 @@ type TestSuite struct {
 
 func (suite *TestSuite) Setup() {
 	pwd, _ := os.Getwd()
-	Tokens = fmt.Sprintf("%s/../test/fixtures/tokens.cfg", pwd)
-	PreferencesDir = fmt.Sprintf("%s/../test/fixtures/preferences", pwd)
-	Mailx = fmt.Sprintf("%s/../test/fixtures/bin/mailx", pwd)
+	root := path.Join(pwd, "..", "test", "fixtures")
+	Tokens = path.Join(root, "tokens.cfg")
+	PreferencesDir = path.Join(root, "preferences")
+	Mailx = path.Join(root, "bin", "mailx")
 	suite.token = "9a790fc4-668b-4d19-aa9f-60c8a00d8621"
 
 }
