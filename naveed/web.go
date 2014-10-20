@@ -118,7 +118,7 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		token = items[1]
 	}
 	if scheme != "Bearer" {
-		respond(res, 403, "invalid credentials")
+		respond(res, 403, "invalid authorization scheme")
 		return
 	}
 
