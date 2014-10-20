@@ -60,12 +60,7 @@ func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// XXX: duplicates `isMuted`
-	filePath := path.Join(PreferencesDir, user)
-	preferences, err := ReadSettings(filePath, ": ")
-	if err != nil {
-		preferences = map[string]string{}
-	}
+	preferences := ReadPreferences(user)
 
 	var apps []string
 	for _, app := range appsByToken {
