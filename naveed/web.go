@@ -109,14 +109,14 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	var scheme string
-	var token string
 	auth := req.Header.Get("Authorization")
 	items := strings.SplitN(auth, " ", 2)
-	if len(items) == 2 {
-		scheme = items[0]
-		token = items[1]
+	if len(items) != 2 {
+		respond(res, 403, "missing credentials")
+		return
 	}
+	scheme := items[0]
+	token := items[1]
 	if scheme != "Bearer" {
 		respond(res, 403, "invalid authorization scheme")
 		return

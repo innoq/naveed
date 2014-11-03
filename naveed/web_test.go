@@ -60,7 +60,7 @@ func TestNotification(t *testing.T) {
 
 	res = suite.Request("POST", uri, nil, nil)
 	assert.Equal(t, 403, res.Code)
-	assert.Equal(t, "invalid credentials\n", res.Body.String())
+	assert.Equal(t, "missing credentials\n", res.Body.String())
 
 	res = suite.Request("POST", uri, nil, map[string]string{
 		"Authorization": "Bearer " + suite.token,
