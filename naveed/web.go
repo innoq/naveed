@@ -30,18 +30,20 @@ func Server(host string, port int, pathPrefix string) {
 }
 
 func Router(pathPrefix string) *mux.Router {
-	if pathPrefix == "" {
-		pathPrefix = "/"
+	router := mux.NewRouter()
+
+	root := router
+	if pathPrefix != "" {
+		fmt.Printf("routing with path prefix %s\n", pathPrefix)
+		root = router.PathPrefix(pathPrefix).Subrouter()
 	}
 
-	router := mux.NewRouter()
-	router.HandleFunc("/", FrontpageHandler)
-	router.HandleFunc("/preferences/{user}", PreferencesHandler)
-	router.HandleFunc("/outbox", NotificationHandler)
+	root.HandleFunc("/", FrontpageHandler)
+	root.HandleFunc("/preferences/{user}", PreferencesHandler)
+	root.HandleFunc("/outbox", NotificationHandler)
 
-	fmt.Printf("routing with path prefix %s\n", pathPrefix)
-	http.Handle(pathPrefix, router)
-	return router
+	http.Handle("/", root)
+	return root
 }
 
 func FrontpageHandler(res http.ResponseWriter, req *http.Request) {
