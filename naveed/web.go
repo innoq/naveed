@@ -3,6 +3,7 @@ package naveed
 import "github.com/gorilla/mux"
 import "html/template"
 import "net/http"
+import "os"
 import "fmt"
 import "path"
 import "sort"
@@ -21,9 +22,11 @@ func Server(host string, port int, pathPrefix string) {
 	Router(pathPrefix)
 
 	address := fmt.Sprintf(":%d", port)
-	fmt.Printf("→ %s%s\n", host, address)
+	fmt.Printf("listening at %s%s\n", host, address)
 	err := http.ListenAndServe(address, nil)
 	ReportError(err, "starting server")
+
+	fmt.Printf("external URL set to %s\n", os.Getenv("NAVEED_ROOT_URL"))
 }
 
 func Router(pathPrefix string) *mux.Router {
@@ -36,6 +39,7 @@ func Router(pathPrefix string) *mux.Router {
 	router.HandleFunc("/preferences/{user}", PreferencesHandler)
 	router.HandleFunc("/outbox", NotificationHandler)
 
+	fmt.Printf("routing with path prefix %s\n", pathPrefix)
 	http.Handle(pathPrefix, router)
 	return router
 }
