@@ -109,7 +109,7 @@ func submitForm(uri string, data url.Values, suite *TestSuite) *httptest.
 func spawnSuite() {
 	if suite == nil {
 		suite = new(TestSuite)
-		suite.Router = Router()
+		suite.Router = Router("")
 	}
 	suite.Setup()
 }

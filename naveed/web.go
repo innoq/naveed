@@ -17,21 +17,26 @@ type provider struct {
 	Muted bool
 }
 
-func Server(port int) {
-	Router()
+func Server(host string, port int, pathPrefix string) {
+	Router(pathPrefix)
 
 	address := fmt.Sprintf(":%d", port)
-	fmt.Printf("→ http://localhost%s\n", address)
+	fmt.Printf("→ %s%s\n", host, address)
 	err := http.ListenAndServe(address, nil)
 	ReportError(err, "starting server")
 }
 
-func Router() *mux.Router {
+func Router(pathPrefix string) *mux.Router {
+	if pathPrefix == "" {
+		pathPrefix = "/"
+	}
+
 	router := mux.NewRouter()
 	router.HandleFunc("/", FrontpageHandler)
 	router.HandleFunc("/preferences/{user}", PreferencesHandler)
 	router.HandleFunc("/outbox", NotificationHandler)
-	http.Handle("/", router)
+
+	http.Handle(pathPrefix, router)
 	return router
 }
 

@@ -19,7 +19,8 @@ Getting Started
 
         $ go get github.com/stretchr/testify
 
-* ensure `NAVEED_ROOT_URL` and `NAVEED_PORT` environment variables are set
+* ensure `NAVEED_HOST`, `NAVEED_PORT`, `NAVEED_PATH_PREFIX` (if applicable) and
+  `NAVEED_ROOT_URL` environment variables are set
 * launch server:
 
         $ make server
