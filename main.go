@@ -1,7 +1,10 @@
 package main
 
+import "os"
+import "strconv"
 import "naveed"
 
 func main() {
-	naveed.Server(8888)
+	port, _ := strconv.Atoi(os.Getenv("NAVEED_PORT"))
+	naveed.Server(port)
 }
