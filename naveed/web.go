@@ -53,7 +53,9 @@ func FrontpageHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	http.Redirect(res, req, "/preferences/"+user, http.StatusFound)
+	prefix := os.Getenv("NAVEED_PATH_PREFIX") // XXX: breaks encapsulation
+	uri := fmt.Sprintf("%s/preferences/%s", prefix, user) // TODO: use reverse routing
+	http.Redirect(res, req, uri, http.StatusFound)
 }
 
 func PreferencesHandler(res http.ResponseWriter, req *http.Request) {

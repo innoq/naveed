@@ -34,7 +34,7 @@ func dispatch(subject string, recipients []string, body string) (output []byte) 
 	ReportError(err, "accessing STDIN")
 	io.WriteString(stdin, body)
 	sig := fmt.Sprintf("\n-- \nsent via Naveed - customize preferences:\n%s\n",
-		os.Getenv("NAVEED_ROOT_URL"))
+		os.Getenv("NAVEED_ROOT_URL")) // XXX: breaks encapsulation?
 	io.WriteString(stdin, sig)
 	stdin.Close()
 
