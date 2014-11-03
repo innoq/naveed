@@ -1,5 +1,6 @@
 package naveed
 
+import "os"
 import "os/exec"
 import "strings"
 import "io"
@@ -31,6 +32,8 @@ func dispatch(subject string, recipients []string, body string) (output []byte) 
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
 	io.WriteString(stdin, body)
+	io.WriteString(stdin, "\n-- \nsent via Naveed - customize preferences:\n" +
+			os.Getenv("NAVEED_ROOT_URL") + "preferences\n")
 	stdin.Close()
 
 	output, err = proc.Output()
