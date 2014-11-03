@@ -52,10 +52,7 @@ func FrontpageHandler(res http.ResponseWriter, req *http.Request) {
 		res.WriteHeader(404) // FIXME: this is almost offensively wrong
 		return
 	}
-
-	prefix := os.Getenv("NAVEED_PATH_PREFIX") // XXX: breaks encapsulation
-	uri := fmt.Sprintf("%s/preferences/%s", prefix, user) // TODO: use reverse routing
-	http.Redirect(res, req, uri, http.StatusFound)
+	redirect("/preferences/"+user, req, res)
 }
 
 func PreferencesHandler(res http.ResponseWriter, req *http.Request) {
@@ -113,7 +110,7 @@ func updatePreferences(user string, res http.ResponseWriter, req *http.Request) 
 	if err != nil {
 		respond(res, 500, "unexpected error")
 	}
-	http.Redirect(res, req, "/preferences/"+user, http.StatusFound)
+	redirect("/preferences/"+user, req, res)
 }
 
 func NotificationHandler(res http.ResponseWriter, req *http.Request) {
@@ -170,6 +167,11 @@ func render(res http.ResponseWriter, view string, data interface{}) {
 	}
 	tmpl, _ := template.ParseFiles(path.Join(TemplatesDir, view+".html"))
 	tmpl.Execute(res, data)
+}
+
+func redirect(uri string, req *http.Request, res http.ResponseWriter) {
+	uri = os.Getenv("NAVEED_PATH_PREFIX") + uri // XXX: breaks encapsulation -- TODO: use reverse routing
+	http.Redirect(res, req, uri, http.StatusFound)
 }
 
 func respond(res http.ResponseWriter, status int, body string) {
