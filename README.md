@@ -24,7 +24,7 @@ The request body should contain `recipient` (may occur more than once),
     recipient=foo&recipient=bar&subject=Hello+World&body=lorem+ipsum
 
 Note that recipients are user IDs which are automatically mapped to the
-corresponding addresses by the application.
+corresponding e-mail addresses.
 
 
 Getting Started
