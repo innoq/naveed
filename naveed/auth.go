@@ -2,6 +2,8 @@ package naveed
 
 import "errors"
 
+const DefaultTokens = "tokens.cfg"
+
 var Tokens string // XXX: only required for testing
 
 func CheckAppToken(appToken string) (app string, err error) {
@@ -24,7 +26,7 @@ func CheckAppToken(appToken string) (app string, err error) {
 
 // TODO: cache to avoid file operations?
 func ReadAppTokens() (appsByToken map[string]string, err error) {
-	tokens := "tokens.cfg"
+	tokens := DefaultTokens
 	if Tokens != "" {
 		tokens = Tokens
 	}
