@@ -21,8 +21,8 @@ type provider struct {
 func Server(host string, port int, pathPrefix string) {
 	Router(pathPrefix)
 
-	address := fmt.Sprintf(":%d", port)
-	fmt.Printf("listening at %s%s\n", host, address)
+	address := fmt.Sprintf("%s:%d", host, port)
+	fmt.Printf("listening at http://%s\n", address)
 	err := http.ListenAndServe(address, nil)
 	ReportError(err, "starting server")
 
