@@ -1,6 +1,7 @@
 package naveed
 
 import "github.com/gorilla/mux"
+import "github.com/gorilla/handlers"
 import "html/template"
 import "net/http"
 import "os"
@@ -42,7 +43,7 @@ func Router(pathPrefix string) *mux.Router {
 	root.HandleFunc("/preferences/{user}", PreferencesHandler)
 	root.HandleFunc("/outbox", NotificationHandler)
 
-	http.Handle("/", root)
+	http.Handle("/", handlers.LoggingHandler(os.Stdout, root))
 	return root
 }
 

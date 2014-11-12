@@ -33,6 +33,7 @@ Getting Started
 * set up dependencies:
 
         $ go get github.com/gorilla/mux
+        $ go get github.com/gorilla/handlers
 
   optionally, for testing:
 
