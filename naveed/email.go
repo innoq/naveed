@@ -41,7 +41,7 @@ func dispatch(subject string, recipients []string, body string, app string) {
 
 	_, err = proc.Output()
 	if err == nil {
-		log.Printf("[%s] <%s>: %s ...", app, strings.Join(recipients, ">, <"),
+		log.Printf("[%s] <%s>: %s", app, strings.Join(recipients, ">, <"),
 			subject)
 	} else {
 		ReportError(err, "sending e-mail")
