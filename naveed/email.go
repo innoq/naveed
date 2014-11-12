@@ -34,6 +34,7 @@ func dispatch(subject string, recipients []string, body string, app string) {
 
 	// FIXME: fugly workaround to avoid Unicode issues with mailx or sendmail
 	body = strconv.QuoteToASCII(body)
+	body = strings.Replace(body, "\\n", "\n", -1)
 
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
