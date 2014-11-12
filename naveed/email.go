@@ -4,7 +4,6 @@ import "os"
 import "os/exec"
 import "log"
 import "fmt"
-import "strconv"
 import "strings"
 import "io"
 
@@ -31,10 +30,6 @@ func dispatch(subject string, recipients []string, body string, app string) {
 
 	addresses := strings.Join(recipients, ", ")
 	proc := exec.Command(cmd, "-s", subject, addresses)
-
-	// FIXME: fugly workaround to avoid Unicode issues with mailx or sendmail
-	body = strconv.QuoteToASCII(body)
-	body = strings.Replace(body, "\\n", "\n", -1)
 
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
