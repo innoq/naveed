@@ -21,7 +21,7 @@ func Sendmail(recipients []string, subject string, body string,
 }
 
 // mailx wrapper
-func dispatch(subject string, recipients []string, body string) (output []byte) {
+func dispatch(subject string, recipients []string, body string) {
 	cmd := "mailx"
 	if Mailx != "" {
 		cmd = Mailx
@@ -38,12 +38,9 @@ func dispatch(subject string, recipients []string, body string) (output []byte) 
 	io.WriteString(stdin, sig)
 	stdin.Close()
 
-	output, err = proc.Output()
-	if err == nil {
-		return
-	} else {
+	_, err = proc.Output()
+	if err != nil {
 		ReportError(err, "sending e-mail")
-		return nil
 	}
 }
 
