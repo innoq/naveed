@@ -2,6 +2,7 @@ package naveed
 
 import "os"
 import "os/exec"
+import "log"
 import "fmt"
 import "strings"
 import "io"
@@ -16,12 +17,12 @@ func Sendmail(recipients []string, subject string, body string,
 	}
 
 	recipients = FilterRecipients(recipients, app)
-	go dispatch(subject, resolveAddresses(recipients), body)
+	go dispatch(subject, resolveAddresses(recipients), body, app)
 	return recipients
 }
 
 // mailx wrapper
-func dispatch(subject string, recipients []string, body string) {
+func dispatch(subject string, recipients []string, body string, app string) {
 	cmd := "mailx"
 	if Mailx != "" {
 		cmd = Mailx
@@ -39,7 +40,10 @@ func dispatch(subject string, recipients []string, body string) {
 	stdin.Close()
 
 	_, err = proc.Output()
-	if err != nil {
+	if err == nil {
+		log.Printf("[%s] <%s>: %s ...", app, strings.Join(recipients, ">, <"),
+			subject)
+	} else {
 		ReportError(err, "sending e-mail")
 	}
 }
