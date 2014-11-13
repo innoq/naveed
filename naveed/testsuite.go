@@ -20,12 +20,12 @@ func (suite *TestSuite) Setup() {
 	Tokens = path.Join(root, "tokens.cfg")
 	PreferencesDir = path.Join(root, DefaultPreferencesDir)
 	TemplatesDir = path.Join("..", DefaultTemplatesDir)
-	Mailx = path.Join(root, "bin", "mailx")
+	Sendmail = path.Join(root, "bin", "sendmail")
 	suite.token = "9a790fc4-668b-4d19-aa9f-60c8a00d8621"
 }
 
 func (suite *TestSuite) Teardown() {
-	// NB: must not reset `Mailx` due to it being invoked as goroutine
+	// NB: must not reset `Sendmail` due to it being invoked as goroutine
 }
 
 func (suite *TestSuite) CaptureStdout() {

@@ -7,9 +7,9 @@ import "fmt"
 import "strings"
 import "io"
 
-var Mailx string // XXX: only required for testing
+var Sendmail string // XXX: only required for testing
 
-func Sendmail(recipients []string, subject string, body string,
+func SendMail(recipients []string, subject string, body string,
 	token string) []string {
 	app, err := CheckAppToken(token)
 	if err != nil {
@@ -21,18 +21,21 @@ func Sendmail(recipients []string, subject string, body string,
 	return recipients
 }
 
-// mailx wrapper
+// sendmail wrapper
 func dispatch(subject string, recipients []string, body string, app string) {
-	cmd := "mailx"
-	if Mailx != "" {
-		cmd = Mailx
+	cmd := "/usr/sbin/sendmail"
+	if Sendmail != "" {
+		cmd = Sendmail
 	}
 
-	addresses := strings.Join(recipients, ", ")
-	proc := exec.Command(cmd, "-s", subject, addresses)
+	addresses := strings.Join(recipients, ",")
+	proc := exec.Command(cmd, addresses)
 
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
+	io.WriteString(stdin, "From: Naveed <info@innoq.com>\n") // XXX: hard-coded
+	io.WriteString(stdin, fmt.Sprintf("Subject: %s\n", subject))
+	io.WriteString(stdin, "Content-Type: text/plain; charset=utf-8\n")
 	io.WriteString(stdin, body)
 	sig := fmt.Sprintf("\n-- \nsent via Naveed - customize preferences:\n%s\n",
 		os.Getenv("NAVEED_ROOT_URL")) // XXX: breaks encapsulation?

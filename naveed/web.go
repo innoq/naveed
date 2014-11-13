@@ -155,7 +155,7 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if Sendmail(recipients, subject, body, token) == nil {
+	if SendMail(recipients, subject, body, token) == nil {
 		respond(res, 403, "invalid credentials")
 		return
 	}
