@@ -1,6 +1,7 @@
 package main
 
 import "net/http"
+import "time"
 import "os"
 import "log"
 import "fmt"
@@ -18,10 +19,19 @@ func main() {
 		return
 	}
 
-	download("users.json", url, username, password)
+	quit := make(chan bool)
+	go sync(3 * time.Hour, "users.json", url, username, password)
+	<-quit // wait indefinitely
 }
 
-func download(filePath, url, username, password string) {
+func sync(interval time.Duration, filePath, url, username, password string) {
+	ticker := time.Tick(interval)
+	for _ = range ticker {
+		download(filePath, url, username, password)
+	}
+}
+
+func download(filePath, url, username, password string) { // TODO: caching support
 	body, err := retrieve(url, username, password)
 	if err != nil {
 		log.Printf("ERROR retrieving %s", url)
