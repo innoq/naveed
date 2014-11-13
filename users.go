@@ -14,7 +14,8 @@ func main() {
 	password := os.Getenv("NAVEED_USERS_PASSWORD")
 
 	if url == "" || username == "" || password == "" { // TODO: optional auth
-		return nil, errors.New("missing settings")
+		log.Printf("ERROR missing settings")
+		return
 	}
 
 	download("users.json", url, username, password)
