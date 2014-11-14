@@ -1,4 +1,4 @@
-package main
+package userindex
 
 import "net/http"
 import "time"
@@ -8,7 +8,7 @@ import "fmt"
 import "io/ioutil"
 import "errors"
 
-func main() {
+func StartSync() {
 	url := os.Getenv("NAVEED_USERS_URL")
 	username := os.Getenv("NAVEED_USERS_USERNAME")
 	password := os.Getenv("NAVEED_USERS_PASSWORD")
@@ -19,7 +19,7 @@ func main() {
 	}
 
 	quit := make(chan bool)
-	go sync(3 * time.Hour, "users.json", url, username, password)
+	go sync(3*time.Hour, "users.json", url, username, password)
 	<-quit // wait indefinitely
 }
 
