@@ -8,7 +8,7 @@ import "fmt"
 import "io/ioutil"
 import "errors"
 
-func StartSync() {
+func StartSync(filePath string, interval time.Duration) {
 	url := os.Getenv("NAVEED_USERS_URL")
 	username := os.Getenv("NAVEED_USERS_USERNAME")
 	password := os.Getenv("NAVEED_USERS_PASSWORD")
@@ -18,9 +18,7 @@ func StartSync() {
 		return
 	}
 
-	quit := make(chan bool)
-	go sync(3*time.Hour, "users.json", url, username, password)
-	<-quit // wait indefinitely
+	go sync(interval, filePath, url, username, password)
 }
 
 func sync(interval time.Duration, filePath, url, username, password string) {
@@ -36,6 +34,12 @@ func download(filePath, url, username, password string) { // TODO: caching suppo
 	body, err := retrieve(url, username, password)
 	if err != nil {
 		log.Printf("ERROR retrieving %s", url)
+		return
+	}
+
+	body, err = Convert(body)
+	if err != nil {
+		log.Printf("ERROR converting user data", url)
 		return
 	}
 
