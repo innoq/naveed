@@ -20,5 +20,10 @@ func ResolveUser(handle string) (name, email string, err error) {
 	}
 
 	user := users[handle]
+	if user.Email == "" { // XXX: crude/insufficient?
+		return "", "", errors.
+			New("failed to retrieve e-mail address for user " + handle)
+	}
+
 	return user.Name, user.Email, nil
 }
