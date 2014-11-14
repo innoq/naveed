@@ -24,6 +24,8 @@ func main() {
 }
 
 func sync(interval time.Duration, filePath, url, username, password string) {
+	download(filePath, url, username, password)
+
 	ticker := time.Tick(interval)
 	for _ = range ticker {
 		download(filePath, url, username, password)
