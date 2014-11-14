@@ -38,7 +38,7 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 		if err == nil {
 			sender = fmt.Sprintf("%s <%s>", name, email)
 		} else {
-			log.Printf("ERROR resolving %s", sender)
+			log.Printf("WARN failed to resolve user %s", sender)
 			sender = ""
 		}
 	}
@@ -69,7 +69,7 @@ func resolveAddresses(users []string) (addresses []string) {
 		if err == nil {
 			addresses = append(addresses, email)
 		} else {
-			log.Printf("ERROR resolving %s", handle)
+			log.Printf("WARN failed to resolve user %s", handle)
 		}
 	}
 	return

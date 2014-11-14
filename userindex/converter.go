@@ -1,5 +1,9 @@
 package userindex
 
+// converts
+// `{ member: [{ uid, displayName, mail }] }` to
+// `{ id: { name, email } }
+
 import "encoding/json"
 import "errors"
 

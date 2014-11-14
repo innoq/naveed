@@ -39,8 +39,12 @@ Getting Started
 
         $ go get github.com/stretchr/testify
 
-* ensure `NAVEED_HOST`, `NAVEED_PORT`, `NAVEED_PATH_PREFIX` (if applicable) and
-  `NAVEED_ROOT_URL` environment variables are set
+* ensure the following environment variables are set:
+    * `NAVEED_HOST`, `NAVEED_PORT`, `NAVEED_PATH_PREFIX` (if applicable) and
+      `NAVEED_ROOT_URL`
+    * `NAVEED_USERS_URL`, `NAVEED_USERS_USERNAME` and `NAVEED_USERS_PASSWORD`
+      for synchronizing the user index - this can be avoided by manually placing
+      `users.json` in the application's root directory
 * ensure `tokens.cfg` is present in the application's root directory (see below)
 * launch server:
 
