@@ -5,8 +5,7 @@ import "io/ioutil"
 import "errors"
 import "userindex"
 
-// maps user handles to e-mail addresses
-// TODO: delegate to userindex (which includes validation)
+// retrieves name and e-mail address for the given user handle
 func ResolveUser(handle string) (name, email string, err error) {
 	userData, err := ioutil.ReadFile("users.json") // XXX: hard-coded
 	if err != nil {
