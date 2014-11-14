@@ -34,8 +34,15 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
 	if sender != "" {
-		sender = fmt.Sprintf("%s <%s>", sender, resolveAddress(sender))
-	} else {
+		name, email, err := ResolveUser(sender)
+		if err == nil {
+			sender = fmt.Sprintf("%s <%s>", name, email)
+		} else {
+			log.Printf("ERROR resolving %s", sender)
+			sender = ""
+		}
+	}
+	if sender == "" {
 		sender = "Naveed <noreply@innoq.com>" // XXX: hard-coded
 	}
 	io.WriteString(stdin, fmt.Sprintf("From: %s\n", sender))
@@ -57,14 +64,13 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 }
 
 func resolveAddresses(users []string) (addresses []string) {
-	for _, user := range users {
-		addresses = append(addresses, resolveAddress(user))
+	for _, handle := range users {
+		_, email, err := ResolveUser(handle)
+		if err == nil {
+			addresses = append(addresses, email)
+		} else {
+			log.Printf("ERROR resolving %s", handle)
+		}
 	}
 	return
-}
-
-// maps user handles to e-mail addresses
-// TODO: delegate to separate service (which might include validation)
-func resolveAddress(user string) (address string) {
-	return user + "@innoq.com"
 }
