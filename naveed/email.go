@@ -33,7 +33,7 @@ func dispatch(subject string, recipients []string, body string, app string) {
 
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
-	io.WriteString(stdin, "From: Naveed <info@innoq.com>\n") // XXX: hard-coded
+	io.WriteString(stdin, "From: Naveed <noreply@innoq.com>\n") // XXX: hard-coded
 	io.WriteString(stdin, fmt.Sprintf("Subject: %s\n", subject))
 	io.WriteString(stdin, "Content-Type: text/plain; charset=utf-8\n")
 	io.WriteString(stdin, body)
