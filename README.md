@@ -15,16 +15,16 @@ HTTP API
 expecting an `Authorization` header of the form `Bearer $token` (where `$token`
 corresponds to the respective application's token as defined in `tokens.cfg`).
 The request body should contain `recipient` (may occur more than once),
-`subject` and `body`.
+`subject` and `body`. It may optionally contain a custom `sender`.
 
     POST /outbox HTTP/1.1
     Content-Type: application/x-www-form-urlencoded
     Authorization: Bearer abc123
 
-    recipient=foo&recipient=bar&subject=Hello+World&body=lorem+ipsum
+    sender=foo&recipient=bar&recipient=baz&subject=Hello+World&body=lorem+ipsum
 
-Note that recipients are user IDs which are automatically mapped to the
-corresponding e-mail addresses.
+Note that sender and recipients are user IDs which are automatically mapped to
+the corresponding e-mail addresses.
 
 
 Getting Started

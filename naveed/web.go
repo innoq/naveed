@@ -139,6 +139,7 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	sender := req.FormValue("sender")
 	subject := req.FormValue("subject")
 	if subject == "" {
 		respond(res, 400, "missing subject")
@@ -155,7 +156,7 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	if SendMail(recipients, subject, body, token) == nil {
+	if SendMail(sender, recipients, subject, body, token) == nil {
 		respond(res, 403, "invalid credentials")
 		return
 	}

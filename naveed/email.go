@@ -9,7 +9,7 @@ import "io"
 
 var Sendmail string // XXX: only required for testing
 
-func SendMail(recipients []string, subject string, body string,
+func SendMail(sender string, recipients []string, subject, body,
 	token string) []string {
 	app, err := CheckAppToken(token)
 	if err != nil {
@@ -17,12 +17,12 @@ func SendMail(recipients []string, subject string, body string,
 	}
 
 	recipients = FilterRecipients(recipients, app)
-	go dispatch(subject, resolveAddresses(recipients), body, app)
+	go dispatch(sender, resolveAddresses(recipients), subject, body, app)
 	return recipients
 }
 
 // sendmail wrapper
-func dispatch(subject string, recipients []string, body string, app string) {
+func dispatch(sender string, recipients []string, subject, body, app string) {
 	cmd := "/usr/sbin/sendmail"
 	if Sendmail != "" {
 		cmd = Sendmail
@@ -33,7 +33,12 @@ func dispatch(subject string, recipients []string, body string, app string) {
 
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
-	io.WriteString(stdin, "From: Naveed <noreply@innoq.com>\n") // XXX: hard-coded
+	if sender != "" {
+		sender = fmt.Sprintf("%s <%s>", sender, resolveAddress(sender))
+	} else {
+		sender = "Naveed <noreply@innoq.com>" // XXX: hard-coded
+	}
+	io.WriteString(stdin, fmt.Sprintf("From: %s\n", sender))
 	io.WriteString(stdin, fmt.Sprintf("Subject: %s\n", subject))
 	io.WriteString(stdin, "Content-Type: text/plain; charset=utf-8\n")
 	io.WriteString(stdin, body)
@@ -51,11 +56,15 @@ func dispatch(subject string, recipients []string, body string, app string) {
 	}
 }
 
-// maps user handles to e-mail addresses
-// TODO: delegate to separate service (which might include validation)
 func resolveAddresses(users []string) (addresses []string) {
 	for _, user := range users {
-		addresses = append(addresses, user+"@innoq.com")
+		addresses = append(addresses, resolveAddress(user))
 	}
 	return
+}
+
+// maps user handles to e-mail addresses
+// TODO: delegate to separate service (which might include validation)
+func resolveAddress(user string) (address string) {
+	return user + "@innoq.com"
 }
