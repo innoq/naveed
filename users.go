@@ -5,7 +5,6 @@ import "time"
 import "os"
 import "log"
 import "fmt"
-import "bufio"
 import "io/ioutil"
 import "errors"
 
@@ -74,18 +73,9 @@ func retrieve(url, username, password string) (body []byte, err error) {
 }
 
 func store(contents []byte, filePath string) (err error) {
-	fh, err := os.Create(filePath)
-	defer fh.Close()
-	if err != nil {
-		return errors.New(fmt.Sprintf("failed to open file %s", filePath))
-	}
-
-	buffer := bufio.NewWriter(fh)
-	defer buffer.Flush()
-	_, err = buffer.Write(contents)
+	err = ioutil.WriteFile(filePath, contents, 0644)
 	if err != nil {
 		return errors.New(fmt.Sprintf("failed to create file %s", filePath))
 	}
-
 	return
 }
