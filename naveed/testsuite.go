@@ -6,6 +6,7 @@ import "net/http/httptest"
 import "path"
 import "os"
 import "io"
+import "userindex"
 
 type TestSuite struct {
 	Router *mux.Router
@@ -22,6 +23,8 @@ func (suite *TestSuite) Setup() {
 	TemplatesDir = path.Join("..", DefaultTemplatesDir)
 	Sendmail = path.Join(root, "bin", "sendmail")
 	suite.token = "9a790fc4-668b-4d19-aa9f-60c8a00d8621"
+
+	userindex.IndexFile = "../users.json"
 }
 
 func (suite *TestSuite) Teardown() {
