@@ -8,6 +8,8 @@ import "fmt"
 import "io/ioutil"
 import "errors"
 
+var IndexFile string // TODO: configurable
+
 func StartSync(filePath string, interval time.Duration) {
 	url := os.Getenv("NAVEED_USERS_URL")
 	username := os.Getenv("NAVEED_USERS_USERNAME")
@@ -18,6 +20,7 @@ func StartSync(filePath string, interval time.Duration) {
 		return
 	}
 
+	IndexFile = filePath
 	go sync(interval, filePath, url, username, password)
 }
 

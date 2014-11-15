@@ -6,7 +6,7 @@ import "errors"
 
 // retrieves name and e-mail address for the given user handle
 func ResolveUser(handle string) (name, email string, err error) {
-	userData, err := ioutil.ReadFile("users.json") // XXX: hard-coded
+	userData, err := ioutil.ReadFile(IndexFile)
 	if err != nil {
 		return "", "", errors.New("failed to read user data")
 	}
