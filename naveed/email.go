@@ -6,6 +6,7 @@ import "log"
 import "fmt"
 import "strings"
 import "io"
+import "userindex"
 
 var Sendmail string // XXX: only required for testing
 
@@ -34,7 +35,7 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
 	if sender != "" {
-		name, email, err := ResolveUser(sender)
+		name, email, err := userindex.ResolveUser(sender)
 		if err == nil {
 			sender = fmt.Sprintf("%s <%s>", name, email)
 		} else {
@@ -64,7 +65,7 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 
 func resolveAddresses(users []string) (addresses []string) {
 	for _, handle := range users {
-		_, email, err := ResolveUser(handle)
+		_, email, err := userindex.ResolveUser(handle)
 		if err == nil {
 			addresses = append(addresses, email)
 		} else {

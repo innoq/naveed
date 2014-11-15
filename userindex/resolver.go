@@ -1,9 +1,8 @@
-package naveed
+package userindex
 
 import "encoding/json"
 import "io/ioutil"
 import "errors"
-import "userindex"
 
 // retrieves name and e-mail address for the given user handle
 func ResolveUser(handle string) (name, email string, err error) {
@@ -12,7 +11,7 @@ func ResolveUser(handle string) (name, email string, err error) {
 		return "", "", errors.New("failed to read user data")
 	}
 
-	users := map[string]userindex.User{}
+	users := map[string]User{}
 	err = json.Unmarshal(userData, &users)
 	if err != nil {
 		return "", "", errors.New("failed to decode JSON data")
