@@ -2,9 +2,10 @@ package naveed
 
 import "github.com/BurntSushi/toml"
 
-type settings struct {
+type settings struct { // XXX: ambiguous names
 	UserIndex string `toml:"userindex"`
 	Sendmail string `toml:"sendmail"`
+	Tokens string `toml:"tokens"` // XXX: only required for testing
 	Preferences string `toml:"preferences"` // XXX: only required for testing
 	Templates string `toml:"templates"` // XXX: only required for testing
 }

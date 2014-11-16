@@ -19,7 +19,6 @@ func (suite *TestSuite) Setup() {
 	root := path.Join(pwd, "..", "test", "fixtures")
 
 	ReadConfig(path.Join(root, "naveed.ini"))
-	Tokens = path.Join(root, "tokens.cfg")
 	suite.token = "9a790fc4-668b-4d19-aa9f-60c8a00d8621"
 }
 

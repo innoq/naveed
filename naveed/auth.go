@@ -2,10 +2,6 @@ package naveed
 
 import "errors"
 
-const DefaultTokens = "tokens.cfg"
-
-var Tokens string // XXX: only required for testing
-
 func CheckAppToken(appToken string) (app string, err error) {
 	if appToken == "" { // XXX: optimization; duplicates last line
 		return "", errors.New("invalid token")
@@ -26,12 +22,7 @@ func CheckAppToken(appToken string) (app string, err error) {
 
 // TODO: cache to avoid file operations?
 func ReadAppTokens() (appsByToken map[string]string, err error) {
-	tokens := DefaultTokens
-	if Tokens != "" {
-		tokens = Tokens
-	}
-
-	appsByToken, err = ReadSettings(tokens, " #")
+	appsByToken, err = ReadSettings(Config.Tokens, " #")
 	if err != nil {
 		return nil, errors.New("could not read tokens")
 	}
