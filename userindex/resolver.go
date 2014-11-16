@@ -5,8 +5,8 @@ import "io/ioutil"
 import "errors"
 
 // retrieves name and e-mail address for the given user handle
-func ResolveUser(handle string) (name, email string, err error) {
-	userData, err := ioutil.ReadFile(IndexFile)
+func ResolveUser(handle, indexFile string) (name, email string, err error) { // XXX: passing `indexFile` should not be necessary
+	userData, err := ioutil.ReadFile(indexFile)
 	if err != nil {
 		return "", "", errors.New("failed to read user data")
 	}

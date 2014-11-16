@@ -8,10 +8,10 @@ import "fmt"
 import "io/ioutil"
 import "errors"
 
-var IndexFile string // TODO: configurable
+var IndexFile string // TODO: use struct to avoid global variable
 
 func StartSync(filePath string, interval time.Duration) {
-	IndexFile = filePath // XXX: does not belong here
+	IndexFile = filePath
 
 	url := os.Getenv("NAVEED_USERS_URL")
 	username := os.Getenv("NAVEED_USERS_USERNAME")

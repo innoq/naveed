@@ -6,7 +6,6 @@ import "net/http/httptest"
 import "path"
 import "os"
 import "io"
-import "userindex"
 
 type TestSuite struct {
 	Router *mux.Router
@@ -18,13 +17,13 @@ type TestSuite struct {
 func (suite *TestSuite) Setup() {
 	pwd, _ := os.Getwd()
 	root := path.Join(pwd, "..", "test", "fixtures")
+
+	ReadConfig(path.Join(root, "naveed.ini"))
 	Tokens = path.Join(root, "tokens.cfg")
 	PreferencesDir = path.Join(root, DefaultPreferencesDir)
 	TemplatesDir = path.Join("..", DefaultTemplatesDir)
 	Sendmail = path.Join(root, "bin", "sendmail")
 	suite.token = "9a790fc4-668b-4d19-aa9f-60c8a00d8621"
-
-	userindex.IndexFile = "../users.json"
 }
 
 func (suite *TestSuite) Teardown() {

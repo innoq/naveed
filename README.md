@@ -32,6 +32,7 @@ Getting Started
 
         $ go get github.com/gorilla/mux
         $ go get github.com/gorilla/handlers
+        $ go get github.com/BurntSushi/toml
 
   optionally, for testing:
 

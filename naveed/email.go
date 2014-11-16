@@ -35,7 +35,7 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")
 	if sender != "" {
-		name, email, err := userindex.ResolveUser(sender)
+		name, email, err := userindex.ResolveUser(sender, Config.UserIndex)
 		if err == nil {
 			sender = fmt.Sprintf("%s <%s>", name, email)
 		} else {
@@ -65,7 +65,7 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 
 func resolveAddresses(users []string) (addresses []string) {
 	for _, handle := range users {
-		_, email, err := userindex.ResolveUser(handle)
+		_, email, err := userindex.ResolveUser(handle, Config.UserIndex)
 		if err == nil {
 			addresses = append(addresses, email)
 		} else {

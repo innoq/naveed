@@ -10,8 +10,9 @@ func main() {
 	host := os.Getenv("NAVEED_HOST")
 	port, _ := strconv.Atoi(os.Getenv("NAVEED_PORT"))
 	pathPrefix := os.Getenv("NAVEED_PATH_PREFIX")
+	naveed.ReadConfig("naveed.ini")
 
-	userindex.StartSync("users.json", 3*time.Hour)
+	userindex.StartSync(naveed.Config.UserIndex, 3*time.Hour)
 
 	naveed.Server(host, port, pathPrefix)
 }
