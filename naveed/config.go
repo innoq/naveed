@@ -5,6 +5,7 @@ import "github.com/BurntSushi/toml"
 type settings struct {
 	UserIndex string `toml:"userindex"`
 	Sendmail string `toml:"sendmail"`
+	Preferences string `toml:"preferences"` // XXX: only required for testing
 	Templates string `toml:"templates"` // XXX: only required for testing
 }
 

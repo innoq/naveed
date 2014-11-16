@@ -5,10 +5,6 @@ import "errors"
 import "path"
 import "bufio"
 
-const DefaultPreferencesDir = "preferences"
-
-var PreferencesDir string // XXX: only required for testing
-
 // discard recipients that have disabled notifications in their preferences
 func FilterRecipients(recipients []string, app string) []string {
 	for i, recipient := range recipients {
@@ -21,13 +17,12 @@ func FilterRecipients(recipients []string, app string) []string {
 
 // XXX: ambiguous contract; it's not obvious that booleans refer to muting
 func WritePreferences(user string, preferences map[string]bool) (err error) {
-	dir := prefPath()
-	err = os.MkdirAll(dir, 0711)
+	err = os.MkdirAll(Config.Preferences, 0711)
 	if err != nil {
 		return errors.New("could not store preferences")
 	}
 
-	filePath := path.Join(dir, user)
+	filePath := path.Join(Config.Preferences, user)
 	fh, err := os.Create(filePath)
 	defer fh.Close()
 	if err != nil {
@@ -46,7 +41,7 @@ func WritePreferences(user string, preferences map[string]bool) (err error) {
 }
 
 func ReadPreferences(user string) (preferences map[string]string) {
-	filePath := path.Join(prefPath(), user)
+	filePath := path.Join(Config.Preferences, user)
 	preferences, err := ReadSettings(filePath, ": ")
 	if err != nil {
 		preferences = map[string]string{}
@@ -55,17 +50,10 @@ func ReadPreferences(user string) (preferences map[string]string) {
 }
 
 func isMuted(user string, app string) (muted bool) {
-	filePath := path.Join(prefPath(), user)
+	filePath := path.Join(Config.Preferences, user)
 	settings, err := ReadSettings(filePath, ": ")
 	if err != nil {
 		return false
 	}
 	return settings[app] == "muted"
-}
-
-func prefPath() string {
-	if PreferencesDir == "" {
-		PreferencesDir = DefaultPreferencesDir
-	}
-	return PreferencesDir
 }
