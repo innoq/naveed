@@ -10,10 +10,6 @@ import "path"
 import "sort"
 import "strings"
 
-const DefaultTemplatesDir = "templates"
-
-var TemplatesDir string // XXX: only required for testing
-
 type provider struct {
 	Name  string
 	Muted bool
@@ -164,10 +160,7 @@ func NotificationHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func render(res http.ResponseWriter, view string, data interface{}) {
-	if TemplatesDir == "" {
-		TemplatesDir = DefaultTemplatesDir
-	}
-	tmpl, _ := template.ParseFiles(path.Join(TemplatesDir, view+".html"))
+	tmpl, _ := template.ParseFiles(path.Join(Config.Templates, view+".html"))
 	tmpl.Execute(res, data)
 }
 

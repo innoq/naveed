@@ -21,7 +21,6 @@ func (suite *TestSuite) Setup() {
 	ReadConfig(path.Join(root, "naveed.ini"))
 	Tokens = path.Join(root, "tokens.cfg")
 	PreferencesDir = path.Join(root, DefaultPreferencesDir)
-	TemplatesDir = path.Join("..", DefaultTemplatesDir)
 	suite.token = "9a790fc4-668b-4d19-aa9f-60c8a00d8621"
 }
 
