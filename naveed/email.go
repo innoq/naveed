@@ -36,7 +36,7 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 		}
 	}
 	if sender == "" {
-		sender = "Naveed <noreply@innoq.com>" // XXX: hard-coded
+		sender = Config.DefaultSender
 	}
 	io.WriteString(stdin, fmt.Sprintf("From: %s\n", sender))
 	io.WriteString(stdin, fmt.Sprintf("Subject: %s\n", subject))

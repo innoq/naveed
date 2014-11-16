@@ -7,6 +7,7 @@ type settings struct { // XXX: ambiguous names
 	Port int `toml:"port"`
 	PathPrefix string `toml:"path-prefix"`
 	ExternalRoot string `toml:"external-root"`
+	DefaultSender string `toml:"default-sender"`
 	UserIndex string `toml:"userindex"`
 	Sendmail string `toml:"sendmail"`
 	Tokens string `toml:"tokens"` // XXX: only required for testing
