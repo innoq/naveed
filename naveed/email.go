@@ -1,6 +1,5 @@
 package naveed
 
-import "os"
 import "os/exec"
 import "log"
 import "fmt"
@@ -44,7 +43,7 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 	io.WriteString(stdin, "Content-Type: text/plain; charset=utf-8\n")
 	io.WriteString(stdin, body)
 	sig := fmt.Sprintf("\n-- \nsent via Naveed - customize preferences:\n%s\n",
-		os.Getenv("NAVEED_ROOT_URL")) // XXX: breaks encapsulation?
+		Config.ExternalRoot)
 	io.WriteString(stdin, sig)
 	stdin.Close()
 

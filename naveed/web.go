@@ -5,6 +5,7 @@ import "github.com/gorilla/handlers"
 import "html/template"
 import "net/http"
 import "os"
+import "log"
 import "fmt"
 import "path"
 import "sort"
@@ -19,11 +20,14 @@ func Server(host string, port int, pathPrefix string) {
 	Router(pathPrefix)
 
 	address := fmt.Sprintf("%s:%d", host, port)
-	fmt.Printf("listening at http://%s\n", address)
+	log.Printf("listening at http://%s\n", address)
+	if Config.ExternalRoot != "" {
+		log.Printf("... and also %s\n", Config.ExternalRoot)
+	} else {
+		log.Printf("WARN external URL not set")
+	}
 	err := http.ListenAndServe(address, nil)
 	ReportError(err, "starting server")
-
-	fmt.Printf("external URL set to %s\n", os.Getenv("NAVEED_ROOT_URL"))
 }
 
 func Router(pathPrefix string) *mux.Router {
@@ -31,7 +35,7 @@ func Router(pathPrefix string) *mux.Router {
 
 	root := router
 	if pathPrefix != "" {
-		fmt.Printf("routing with path prefix %s\n", pathPrefix)
+		log.Printf("routing with path prefix %s\n", pathPrefix)
 		root = router.PathPrefix(pathPrefix).Subrouter()
 	}
 
