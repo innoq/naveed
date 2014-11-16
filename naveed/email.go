@@ -8,8 +8,6 @@ import "strings"
 import "io"
 import "userindex"
 
-var Sendmail string // XXX: only required for testing
-
 func SendMail(sender string, recipients []string, subject, body,
 	token string) []string {
 	app, err := CheckAppToken(token)
@@ -24,13 +22,8 @@ func SendMail(sender string, recipients []string, subject, body,
 
 // sendmail wrapper
 func dispatch(sender string, recipients []string, subject, body, app string) {
-	cmd := "/usr/sbin/sendmail"
-	if Sendmail != "" {
-		cmd = Sendmail
-	}
-
 	addresses := strings.Join(recipients, ",")
-	proc := exec.Command(cmd, addresses)
+	proc := exec.Command(Config.Sendmail, addresses)
 
 	stdin, err := proc.StdinPipe()
 	ReportError(err, "accessing STDIN")

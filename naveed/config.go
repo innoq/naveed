@@ -4,6 +4,7 @@ import "github.com/BurntSushi/toml"
 
 type settings struct {
 	UserIndex string `toml:"userindex"`
+	Sendmail string `toml:"sendmail"`
 }
 
 var Config settings
