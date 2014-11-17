@@ -1,6 +1,5 @@
 package naveed
 
-import "fmt"
 import "os"
 import "strings"
 import "bufio"
@@ -26,10 +25,4 @@ func ReadSettings(filePath string,
 	}
 
 	return settings, nil
-}
-
-func ReportError(err error, ctx string) {
-	if err != nil {
-		fmt.Printf("ERROR %s: %s\n", ctx, err)
-	}
 }

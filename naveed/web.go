@@ -20,14 +20,16 @@ func Server(host string, port int, pathPrefix string) {
 	Router(pathPrefix)
 
 	address := fmt.Sprintf("%s:%d", host, port)
-	log.Printf("listening at http://%s\n", address)
+	log.Printf("listening at http://%s", address)
 	if Config.ExternalRoot != "" {
-		log.Printf("... and also %s\n", Config.ExternalRoot)
+		log.Printf("... and also %s", Config.ExternalRoot)
 	} else {
 		log.Printf("WARN external URL not set")
 	}
 	err := http.ListenAndServe(address, nil)
-	ReportError(err, "starting server")
+	if err != nil {
+		log.Printf("ERROR starting server")
+	}
 }
 
 func Router(pathPrefix string) *mux.Router {

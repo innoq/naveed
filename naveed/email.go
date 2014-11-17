@@ -25,7 +25,10 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 	proc := exec.Command(Config.Sendmail, addresses)
 
 	stdin, err := proc.StdinPipe()
-	ReportError(err, "accessing STDIN")
+	if err != nil {
+		log.Printf("ERROR accessing STDIN")
+		return
+	}
 	if sender != "" {
 		name, email, err := userindex.ResolveUser(sender, Config.UserIndex)
 		if err == nil {
@@ -51,7 +54,7 @@ func dispatch(sender string, recipients []string, subject, body, app string) {
 	if err == nil {
 		log.Printf("[%s] %s: %s", app, addresses, subject)
 	} else {
-		ReportError(err, "sending e-mail")
+		log.Printf("ERROR invoking sendmail")
 	}
 }
 
