@@ -18,7 +18,7 @@ func StartSync(filePath string, interval time.Duration) {
 	password := os.Getenv("NAVEED_USERS_PASSWORD")
 
 	if url == "" || username == "" || password == "" { // TODO: optional auth
-		log.Printf("ERROR missing settings")
+		log.Printf("WARN missing settings; user index will not be synchronized")
 		return
 	}
 

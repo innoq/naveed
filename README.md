@@ -54,3 +54,27 @@ NB:
   manually - it contains an authorization string for each application
 * the `REMOTE_USER` HTTP header is used to automatically determine the current
   user (i.e. the application is expected to be served via a reverse proxy)
+
+
+Architectural Overview
+----------------------
+
+Naveed accepts messages via HTTP (cf. [HTTP API](#http-api)), turns the
+respective user IDs of sender and recipients into e-mail addresses via the user
+index, and sends those messages via e-mail while remaining oblivious to the
+contents.
+
+Incoming messages are required to provide an authorization token, which is
+verified against a list of known tokens - ideally each "message provider"
+application is assigned a separate token.
+
+Users can mute individual message providers. Those preferences are stored as
+plain text files.
+
+Message delivery is delegated to Unix `sendmail` to avoid the need for SMTP
+authentication - i.e. the host system is expected to be configured accordingly.
+
+The user index is a simple JSON file which maps user IDs to full names and
+e-mail addresses. If the corresponding settings are present (cf.
+[Getting Started](#getting-started)), that index will periodically be
+synchronized.
