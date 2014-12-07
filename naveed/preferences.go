@@ -37,7 +37,7 @@ func WritePreferences(user string, preferences map[string]bool) (err error) {
 		}
 	}
 
-	return
+	return err
 }
 
 func ReadPreferences(user string) (preferences map[string]string) {
@@ -46,7 +46,7 @@ func ReadPreferences(user string) (preferences map[string]string) {
 	if err != nil {
 		preferences = map[string]string{}
 	}
-	return
+	return preferences
 }
 
 func isMuted(user string, app string) (muted bool) {

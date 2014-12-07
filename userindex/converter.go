@@ -42,5 +42,5 @@ func Convert(memberData []byte) (userData []byte, err error) {
 		return nil, errors.New("failed to encode JSON data")
 	}
 
-	return
+	return userData, err
 }

@@ -87,5 +87,5 @@ func store(contents []byte, filePath string) (err error) {
 	if err != nil {
 		return errors.New(fmt.Sprintf("failed to create file %s", filePath))
 	}
-	return
+	return err
 }
