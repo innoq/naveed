@@ -1,4 +1,5 @@
-mainly an HTTP-to-SMTP bridge, but allowing for user preferences
+HTTP-to-SMTP bridge for arbitrary providers to send e-mail notifications based
+on user preferences
 
 > Navid (نوید), also spelled Naveed, is a Persian name meaning "bearer of good
 > news" or "best wishes".
