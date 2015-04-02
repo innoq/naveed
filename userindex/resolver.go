@@ -1,6 +1,7 @@
 package userindex
 
 import "encoding/json"
+import "strings"
 import "io/ioutil"
 import "errors"
 
@@ -17,6 +18,7 @@ func ResolveUser(handle, indexFile string) (name, email string, err error) { // 
 		return "", "", errors.New("failed to decode JSON data")
 	}
 
+	handle = strings.ToLower(handle) // XXX: non-generic
 	user := users[handle]
 	if user.Email == "" { // XXX: crude/insufficient?
 		return "", "", errors.
