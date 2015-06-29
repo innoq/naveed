@@ -3,7 +3,6 @@ package naveed
 import "github.com/stretchr/testify/assert"
 import "net/http/httptest"
 import "testing"
-import "os"
 import "net/url"
 import "fmt"
 import "strings"
@@ -25,8 +24,7 @@ func TestPreferences(t *testing.T) {
 		"REMOTE_USER": "johndoe",
 	})
 	assert.Equal(t, 302, res.Code)
-	prefix := os.Getenv("NAVEED_PATH_PREFIX") // XXX: should not be necessary
-	uri := fmt.Sprintf("%s/preferences/johndoe", prefix)
+	uri := fmt.Sprintf("%s/preferences/johndoe", Config.PathPrefix)
 	assert.Equal(t, uri, res.Header()["Location"][0])
 
 	res = suite.Request("GET", "/preferences/johndoe", nil, nil)
