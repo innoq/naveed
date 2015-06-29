@@ -171,7 +171,7 @@ func render(res http.ResponseWriter, view string, data interface{}) {
 }
 
 func redirect(uri string, req *http.Request, res http.ResponseWriter) {
-	uri = os.Getenv("NAVEED_PATH_PREFIX") + uri // XXX: breaks encapsulation -- TODO: use reverse routing
+	uri = Config.PathPrefix + uri // TODO: use reverse routing
 	http.Redirect(res, req, uri, http.StatusFound)
 }
 
