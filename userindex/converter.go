@@ -1,7 +1,7 @@
 package userindex
 
 // converts
-// `{ member: [{ uid, displayName, mail }] }` to
+// `{ members: { uid: { uid, displayName, mail } }` to
 // `{ id: { name, email } }
 
 import "encoding/json"
@@ -13,7 +13,7 @@ type User struct {
 }
 
 type registry struct {
-	Member []member `json:"member"`
+	Members map[string]member `json:"members"`
 }
 
 type member struct {
@@ -30,7 +30,7 @@ func Convert(memberData []byte) (userData []byte, err error) {
 	}
 
 	users := map[string]User{}
-	for _, member := range reg.Member {
+	for _, member := range reg.Members {
 		user := new(User)
 		user.Name = member.Name
 		user.Email = member.Email
