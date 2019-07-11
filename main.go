@@ -1,8 +1,10 @@
 package main
 
-import "time"
-import "naveed"
-import "userindex"
+import (
+	"time"
+	"naveed/naveed"
+	"naveed/userindex"
+)
 
 func main() {
 	naveed.ReadConfig("naveed.ini")
@@ -11,4 +13,5 @@ func main() {
 
 	cfg := naveed.Config
 	naveed.Server(cfg.Host, cfg.Port, cfg.PathPrefix)
+	naveed.NatsSubscriber()
 }
