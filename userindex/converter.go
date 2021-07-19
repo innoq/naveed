@@ -8,7 +8,7 @@ import "encoding/json"
 import "errors"
 
 type User struct {
-	Name string `json:"name"`
+	Name  string `json:"name"`
 	Email string `json:"email"`
 }
 
@@ -17,8 +17,8 @@ type registry struct {
 }
 
 type member struct {
-	Id string `json:"uid"`
-	Name string `json:"displayName"`
+	Id    string `json:"uid"`
+	Name  string `json:"displayName"`
 	Email string `json:"mail"`
 }
 

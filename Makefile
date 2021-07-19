@@ -4,7 +4,7 @@ server:
 	go run main.go
 
 test:
-	cd naveed && go test
+	go test -v ./...
 
 lint:
 	gofmt -s -l -w *.go naveed/**.go

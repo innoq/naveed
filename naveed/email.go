@@ -5,7 +5,7 @@ import "log"
 import "fmt"
 import "strings"
 import "io"
-import "userindex"
+import "github.com/innoq/naveed/userindex"
 
 func SendMail(sender string, recipients []string, subject, body,
 	token string) []string {

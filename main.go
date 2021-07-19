@@ -1,8 +1,8 @@
 package main
 
 import "time"
-import "naveed"
-import "userindex"
+import "github.com/innoq/naveed/naveed"
+import "github.com/innoq/naveed/userindex"
 
 func main() {
 	naveed.ReadConfig("naveed.ini")
