@@ -57,6 +57,11 @@ NB:
   user (i.e. the application is expected to be served via a reverse proxy)
 
 
+To use with docker
+
+* build with `docker build --rm -t naveed .`
+* run with   `docker run --name runningnaveed -p80:8465 -it -e NAVEED_USERS_URL=XXX -e NAVEED_USERS_USERNAME=YYY -e NAVEED_USERS_PASSWORD=ZZZ --rm naveed`
+
 Architectural Overview
 ----------------------
 

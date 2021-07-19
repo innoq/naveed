@@ -1,8 +1,9 @@
 package main
 
-import "time"
-import "naveed"
-import "userindex"
+import (  "time"
+          "naveed/userindex"
+          "naveed/naveed"
+)
 
 func main() {
 	naveed.ReadConfig("naveed.ini")
