@@ -4,14 +4,15 @@ RUN apk --update add \
     # git \
     # glide \
     # upx \
-    # libc-dev \
+    libc-dev \
+    gcc \
     && rm -rf /var/lib/apt/lists/* \
     && rm /var/cache/apk/*
 
 WORKDIR /app
 COPY . /app
 
-# RUN go test ./... -v
+RUN go test ./... -v
 # RUN go build -o bin/naveed && /usr/bin/upx /app/bin/naveed
 RUN go build -o bin/naveed
 

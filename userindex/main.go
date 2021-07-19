@@ -43,7 +43,7 @@ func download(filePath, url, username, password string) { // TODO: caching suppo
 
 	body, err = Convert(body)
 	if err != nil {
-		log.Printf("ERROR converting user data", url)
+		log.Printf("ERROR converting user data: %s", url)
 		return
 	}
 
