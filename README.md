@@ -57,6 +57,25 @@ NB:
   user (i.e. the application is expected to be served via a reverse proxy)
 
 
+### Docker
+
+* build:
+
+        $ docker build --rm -t naveed .
+
+* run:
+
+        $ docker run -it --rm --name naveed -p8080:8465
+                -v "$(pwd)/config:/app/config" \
+                -e NAVEED_USERS_URL=… \
+                -e NAVEED_USERS_USERNAME=… \
+                -e NAVEED_USERS_PASSWORD=… \
+                naveed
+
+    note that you will need to add the configuration files mentioned above to
+    the container and you might also need to adjust the port numbers
+
+
 Architectural Overview
 ----------------------
 
