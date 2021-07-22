@@ -65,8 +65,8 @@ NB:
 
 * run:
 
-        $ docker run -it --rm --name naveed -p8080:8465
-                -v "$(pwd)/config:/app/config" \
+        $ docker run --rm --name naveed -p8080:8465
+                -v "$(pwd)/config:/" \
                 -e NAVEED_USERS_URL=… \
                 -e NAVEED_USERS_USERNAME=… \
                 -e NAVEED_USERS_PASSWORD=… \
